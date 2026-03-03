@@ -2,7 +2,7 @@ import type { OrderSummaryProps } from "@/lib/types/cart";
 import { CartItem } from "../CartItem";
 
 export const OrderSummary = ({ cartItems }: OrderSummaryProps) => {
-  const subtotal = 555.45;
+  const subtotal = 555;
   const shipping = 25;
   const total = subtotal + shipping;
 

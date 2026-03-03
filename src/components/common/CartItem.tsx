@@ -1,4 +1,3 @@
-// components/checkout/CartItem.tsx
 import { Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { CartItemProps } from "@/lib/types/cart";
