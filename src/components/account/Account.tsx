@@ -17,10 +17,10 @@ const Account = () => {
 
         <p> sign up with </p>
         <div className='flex'>
-        <i class="fa-brands fa-google"></i>
+        <i className="fa-brands fa-google"></i>
         <label> sign with google</label>
 
-    <i class="fa-brands fa-facebook"></i>
+    <i className="fa-brands fa-facebook"></i>
      <label>sign with facebook</label>
 </div>
 
