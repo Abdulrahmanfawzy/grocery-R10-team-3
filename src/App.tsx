@@ -8,6 +8,9 @@ import CheckoutPage1 from "./pages/CheckoutPage1";
 import CheckoutPage2 from "./pages/CheckoutPage2";
 import CheckoutPage3 from "./pages/CheckoutPage3";
 
+
+
+
 const App = () => {
   return (
     <div>
