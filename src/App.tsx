@@ -1,28 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
-import CheckoutPage from "./pages/CheckoutPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Cart from "./pages/Cart";
 
-function App() {
+
+const App = () => {
   return (
-    <Router>
-      <div className="flex min-h-screen flex-col">
-        <Navbar />
-
-        <main className="grow">
-          <Routes>
-            <Route
-              path="/"
-              element={<div>Home Page (Under Construction)</div>}
-            />
-            <Route path="/checkout" element={<CheckoutPage />} />
-          </Routes>
-        </main>
-
-        <Footer />
-      </div>
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Cart />} />
+        {/* <Route path="/checkout" element={<Checkout />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
