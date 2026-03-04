@@ -1,8 +1,8 @@
 import type { OrderSummaryProps } from "@/lib/types/cart";
 import { CartItem } from "../CartItem";
 
-export const OrderSummary = ({ cartItems }: OrderSummaryProps) => {
-  const subtotal = 555.45;
+export const OrderSummary = ({ cartItems = [] }: OrderSummaryProps) => {
+  const subtotal = 555;
   const shipping = 25;
   const total = subtotal + shipping;
 
@@ -17,6 +17,9 @@ export const OrderSummary = ({ cartItems }: OrderSummaryProps) => {
       </div>
 
       <div className="mt-8 space-y-4 pt-6 border-t border-dashed border-gray-200">
+        <div className="s text-xl font-bold text-[#004a61] pt-2  border-gray-100">
+          <span>Total Amounts</span>
+        </div>
         <div className="flex justify-between text-base text-gray-400">
           <span>Subtotal</span>
           <span className="font-medium">£ {subtotal}</span>
@@ -25,7 +28,7 @@ export const OrderSummary = ({ cartItems }: OrderSummaryProps) => {
           <span>Shipping</span>
           <span className="font-medium">£ {shipping}</span>
         </div>
-        <div className="flex justify-between text-xl font-bold text-[#004a61] pt-2 border-t border-gray-100">
+        <div className="flex justify-between text-xl font-semibold text-[#004a61] pt-2 border-t border-gray-100">
           <span>Total</span>
           <span>£ {total}</span>
         </div>
