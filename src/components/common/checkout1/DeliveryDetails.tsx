@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Truck, MapPin, Clock, Zap, Timer } from "lucide-react";
+import { Truck, Clock, Zap, Timer, Car } from "lucide-react";
 import {
   deliverySchema,
   type DeliveryFormData,
@@ -46,10 +46,10 @@ export const DeliveryDetails = () => {
             <label className="text-sm font-medium text-gray-700">
               Fulfilment Method
             </label>
-            <div className="flex gap-4">
+            <div className="flex gap-15">
               <Button
                 type="button"
-                className={`flex-1 gap-2 h-11 rounded-lg ${
+                className={`flex-1 gap-2 h-11 rounded-lg cursor-pointer ${
                   selectedMethod === "delivery"
                     ? "bg-[#a3a3a3] hover:bg-[#8e8e8e] text-white"
                     : "bg-[#c2c2bc] hover:bg-[#b1b1aa] text-[#555]"
@@ -61,14 +61,14 @@ export const DeliveryDetails = () => {
               <Button
                 type="button"
                 variant="secondary"
-                className={`flex-1 gap-2 h-11 rounded-lg ${
+                className={`flex-1 gap-2 h-11 rounded-lg cursor-pointer ${
                   selectedMethod === "pickup"
                     ? "bg-[#a3a3a3] hover:bg-[#8e8e8e] text-white"
                     : "bg-[#c2c2bc] hover:bg-[#b1b1aa] text-[#555]"
                 }`}
                 onClick={() => setValue("fulfilmentMethod", "pickup")}
               >
-                <MapPin size={18} /> Pick-Up
+                <Car size={18} /> Pick-Up
               </Button>
             </div>
             {errors.fulfilmentMethod && (
@@ -145,10 +145,10 @@ export const DeliveryDetails = () => {
                 <label className="text-sm font-medium text-gray-700">
                   Schedule Delivery
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-15">
                   <Button
                     type="button"
-                    className={`flex-1 gap-2 h-10 text-xs ${
+                    className={` gap-2 h-10 text-xs hover:bg-gray-500 ${
                       watch("scheduleDelivery") === "now"
                         ? "bg-[#a3a3a3] text-white"
                         : "bg-[#c2c2bc] text-[#555]"
@@ -159,7 +159,7 @@ export const DeliveryDetails = () => {
                   </Button>
                   <Button
                     type="button"
-                    className={`flex-1 gap-2 h-10 text-xs ${
+                    className={` gap-2 h-10 text-xs hover:bg-gray-500 ${
                       watch("scheduleDelivery") === "later"
                         ? "bg-[#a3a3a3] text-white"
                         : "bg-[#c2c2bc] text-[#555]"
@@ -175,10 +175,10 @@ export const DeliveryDetails = () => {
                 <label className="text-sm font-medium text-gray-700">
                   Delivery Speed
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-15">
                   <Button
                     type="button"
-                    className={`flex-1 gap-2 h-10 text-xs ${
+                    className={` gap-2 h-10 text-xs hover:bg-gray-500 ${
                       watch("deliverySpeed") === "standard"
                         ? "bg-[#a3a3a3] text-white"
                         : "bg-[#c2c2bc] text-[#555]"
@@ -189,7 +189,7 @@ export const DeliveryDetails = () => {
                   </Button>
                   <Button
                     type="button"
-                    className={`flex-1 gap-2 h-10 text-xs ${
+                    className={` gap-2 h-10 text-xs hover:bg-gray-500 ${
                       watch("deliverySpeed") === "priority"
                         ? "bg-[#a3a3a3] text-white"
                         : "bg-[#c2c2bc] text-[#555]"

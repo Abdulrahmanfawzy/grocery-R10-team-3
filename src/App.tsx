@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
-import CheckoutPage from "./pages/CheckoutPage1";
+import CheckoutPage1 from "./pages/CheckoutPage1";
+import CheckoutPage2 from "./pages/CheckoutPage2";
+import CheckoutPage3 from "./pages/CheckoutPage3";
 
 function App() {
   return (
@@ -15,7 +17,9 @@ function App() {
               path="/"
               element={<div>Home Page (Under Construction)</div>}
             />
-            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/checkout1" element={<CheckoutPage1 />} />
+            <Route path="/checkout2" element={<CheckoutPage2 />} />
+            <Route path="/checkout3" element={<CheckoutPage3 />} />
           </Routes>
         </main>
 

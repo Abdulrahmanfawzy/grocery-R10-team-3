@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   contactSchema,
   type ContactFormData,
 } from "@/lib/schemas/contact.schema";
+import { CircleCheck } from "lucide-react";
 
 export const ContactForm = () => {
   const {
@@ -95,10 +95,7 @@ export const ContactForm = () => {
           </div>
 
           <div className="md:col-span-2 flex items-center space-x-2 mt-2">
-            <Checkbox
-              id="create-account"
-              className="rounded-full border-gray-300"
-            />
+            <CircleCheck size={20} className="text-gray-400" />
             <label
               htmlFor="create-account"
               className="text-sm text-gray-500 cursor-pointer"
