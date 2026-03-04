@@ -19,6 +19,7 @@ const ProductList = () => {
       <div className="mb-5">
         <DiscountBanner />
       </div>
+      
     </div>
     <div className="mb-5 px-4 sm:px-6 lg:px-8">
       <FeaturesBar />
