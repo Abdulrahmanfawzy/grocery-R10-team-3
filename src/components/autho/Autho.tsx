@@ -26,10 +26,10 @@ const autho = () => {
 
         <p> contact with me</p>
         <div className='flex'>
-        <i class="fa-brands fa-google"></i>
+        <i className="fa-brands fa-google"></i>
         <label>continue with google</label>
 
-    <i class="fa-brands fa-facebook"></i>
+    <i className="fa-brands fa-facebook"></i>
      <label>continue with facebook</label>
 </div>
 

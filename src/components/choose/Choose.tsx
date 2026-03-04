@@ -16,7 +16,7 @@ const Choose = () => {
 </div>
 <div className='flex  items-center  cursor-pointer'>
 
-    <i  class="fa-solid fa-user"></i>
+    <i  className="fa-solid fa-user"></i>
     <p>use another account</p>
     
 </div>
