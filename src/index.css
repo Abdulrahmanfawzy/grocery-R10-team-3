@@ -1,24 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@import "tailwindcss";
 
 .dark {
   --background: oklch(0.141 0.005 285.823);
@@ -58,7 +38,7 @@
   --color-brand-black: var(--black);
   --color-brand-primary: var(--primary-color);
   --color-primary-light: var(--primary-color-light);
-    --color-brand-white: #ffffff;
+  --color-brand-white: #ffffff;
   --color-brand-gray-light: #d9d9d9;
   --color-nav-bg: #f7fcff;
 
@@ -73,7 +53,6 @@
   --black: #141212;
 }
 
-
 * {
   box-sizing: border-box;
   list-style: none;
@@ -81,5 +60,4 @@
 body {
   font-family: "Inter", sans-serif;
   background-color: #fff;
-  
 }
