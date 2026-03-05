@@ -1,0 +1,16 @@
+.headingEllipse {
+    background-color: #014162;
+    display: inline-block;
+    width: 18px;
+    height: 4px;
+    border-radius: 25px;
+}
+
+.headingCircle {
+    background-color: #014162;
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
