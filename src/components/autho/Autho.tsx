@@ -10,16 +10,16 @@ const autho = () => {
        <div className='flex flex-col items-center justify-center  mt-6 w-full  max-w-[350px] max-w-sm gap-y-4  mt-6'>
         <input 
         type='text' placeholder='enter your email' 
-        className='w-full border border-gray-300 bg-gray-200 text-gray-800 rounded-lg  p-7  rounded ' />
+        className='w-full border border-gray-300 bg-gray-200 text-gray-800 rounded-lg  py-3 rounded ' />
 
          <input 
         type='text' placeholder='enter your password' 
-        className="w-full border border-gray-300 bg-gray-200 text-gray-800 rounded-lg  py-7 rounded " />
+        className="w-full border border-gray-300 bg-gray-200 text-gray-800 rounded-lg  py-3 rounded " />
 
         
            
   <Link to='/Account' className='w-full  p-7'> 
- <button className='w-full cursor-pointer bg-[#014262]  bg-orange-400 text-white px-6 py-3 rounded-full hover:bg-transparent transition duration-300'>continue</button></Link>
+ <button className='w-full cursor-pointer bg-[#014262]   text-white px-6 py-3 rounded-full hover:bg-transparent transition duration-300'>continue</button></Link>
       
 </div>
 

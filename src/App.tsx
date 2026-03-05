@@ -1,8 +1,9 @@
 import ProductList from "./pages/productList/ProductList";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Cart from "./pages/Cart";
-import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+
 
 import CheckoutPage1 from "./pages/CheckoutPage1";
 import CheckoutPage2 from "./pages/CheckoutPage2";
@@ -13,7 +14,7 @@ import Account from './components/account/Account';
 
 import Recovery from './components/recovery/Recovery';
 import Choose from "./components/choose/Choose";
-
+import Verification from  './components/verification/Verification';
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route path='/account' element={<Account/>}/>
           <Route path='/Choose' element={<Choose/>}/>
           <Route path='/Recovery' element={<Recovery/>}/>
+          <Route path='/Verification' element={<Verification/>}/>
         </Routes>
       </BrowserRouter>
       <Footer />
