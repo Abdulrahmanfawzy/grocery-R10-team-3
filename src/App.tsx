@@ -29,7 +29,6 @@ const App = () => {
           <Route path="/login" element={<Autho />} />
           <Route path="/account" element={<Account />} />
           <Route path="/Choose" element={<Choose />} />
-
           <Route path="/Recovery" element={<Recovery />} />
         </Routes>
       </BrowserRouter>
