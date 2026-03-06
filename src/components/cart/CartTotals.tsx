@@ -34,8 +34,11 @@ export default function CartTotals({ cart, shipping }: CartTotalsProps) {
           </div>
         </CardContent>
       </Card>
-      <Button className="w-fit px-8 bg-blue-900 hover:bg-blue-900/90 text-white" disabled={cartLength === 0}>
-        <Link to="/checkout">Go To Checkout</Link>
+      <Button
+        className="w-fit px-8 bg-blue-900 hover:bg-blue-900/90 text-white"
+        disabled={cartLength === 0}
+      >
+        <Link to="/checkout1">Go To Checkout</Link>
       </Button>
     </div>
   );

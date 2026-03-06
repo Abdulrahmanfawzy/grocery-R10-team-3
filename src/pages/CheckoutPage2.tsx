@@ -4,12 +4,13 @@ import Steps from "@/components/common/Steps";
 import { Button } from "@/components/ui/button";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { cartItems } from "@/lib/constants/mocData";
+import { useAppSelector } from "@/lib/store/hooks";
 import { useNavigate } from "react-router-dom";
 
 const CheckoutPage2 = () => {
-  const subtotal = 555;
-  const shipping = 25;
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const subtotal = cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const shipping = subtotal * 0.1;
   const total = subtotal + shipping;
 
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const CheckoutPage2 = () => {
 
           <div className="space-y-2 max-h-100 overflow-y-auto pr-4 custom-scrollbar">
             {cartItems.map((item, idx) => (
-              <CartItem key={idx} item={item} />
+              <CartItem key={item.id || idx} item={item} />
             ))}
           </div>
         </div>
@@ -36,15 +37,15 @@ const CheckoutPage2 = () => {
               </div>
               <div className="flex justify-between text-base text-gray-400">
                 <span>Subtotal</span>
-                <span className="font-medium">£ {subtotal}</span>
+                <span className="font-medium">£ {subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-base text-gray-400">
                 <span>Shipping</span>
-                <span className="font-medium">£ {shipping}</span>
+                <span className="font-medium">£ {shipping.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-xl font-semibold text-[#004a61] pt-2 border-t border-gray-100">
                 <span>Total</span>
-                <span>£ {total}</span>
+                <span>£ {total.toFixed(2)}</span>
               </div>
             </div>
             <div className="mt-15">

@@ -1,5 +1,4 @@
 import { OrderSummary } from "@/components/common/checkout1/OrderSummary";
-import { cartItems } from "@/lib/constants/mocData";
 
 import DriverInfo from "@/components/common/checkout3/DriverInfo";
 import TrackOrder from "@/components/common/checkout3/TrackOrder";
@@ -14,7 +13,7 @@ export default function CheckoutPage3() {
         <TrackOrder />
         <DriverInfo />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-15 w-full ">
-          <OrderSummary cartItems={cartItems} />
+          <OrderSummary />
           <OrderOption />
         </div>
       </div>

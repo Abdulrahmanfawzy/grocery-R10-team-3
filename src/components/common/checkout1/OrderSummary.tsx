@@ -1,9 +1,13 @@
+import { useAppSelector } from "@/lib/store/hooks";
 import type { OrderSummaryProps } from "@/lib/types/cart";
 import { CartItem } from "../CartItem";
 
 export const OrderSummary = ({ cartItems = [] }: OrderSummaryProps) => {
-  const subtotal = 555;
-  const shipping = 25;
+  const reduxCart = useAppSelector((state) => state.cart.items);
+  const items = reduxCart.length > 0 ? reduxCart : cartItems;
+
+  const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const shipping = subtotal * 0.1;
   const total = subtotal + shipping;
 
   return (
@@ -11,8 +15,8 @@ export const OrderSummary = ({ cartItems = [] }: OrderSummaryProps) => {
       <h3 className="text-xl font-bold mb-6">Cart Summary</h3>
 
       <div className="space-y-2 max-h-100 overflow-y-auto pr-4 custom-scrollbar">
-        {cartItems.map((item, idx) => (
-          <CartItem key={idx} item={item} />
+        {items.map((item, idx) => (
+          <CartItem key={item.id || idx} item={item} />
         ))}
       </div>
 
@@ -22,15 +26,15 @@ export const OrderSummary = ({ cartItems = [] }: OrderSummaryProps) => {
         </div>
         <div className="flex justify-between text-base text-gray-400">
           <span>Subtotal</span>
-          <span className="font-medium">£ {subtotal}</span>
+          <span className="font-medium">£ {subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-base text-gray-400">
           <span>Shipping</span>
-          <span className="font-medium">£ {shipping}</span>
+          <span className="font-medium">£ {shipping.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-xl font-semibold text-[#004a61] pt-2 border-t border-gray-100">
           <span>Total</span>
-          <span>£ {total}</span>
+          <span>£ {total.toFixed(2)}</span>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 export interface CartItemType {
+  id: number;
   name: string;
   price: number;
   quantity: number;
@@ -10,5 +11,5 @@ export interface CartItemProps {
   item: CartItemType;
 }
 export interface OrderSummaryProps {
-  cartItems: CartItemType[];
+  cartItems?: CartItemType[];
 }
