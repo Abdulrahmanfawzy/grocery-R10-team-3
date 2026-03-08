@@ -4,7 +4,7 @@ import Steps from "@/components/common/Steps";
 import { Button } from "@/components/ui/button";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { useAppSelector } from "@/lib/store/hooks";
+import { useAppSelector } from "@/hooks/hooks";
 import { useNavigate } from "react-router-dom";
 
 const CheckoutPage2 = () => {

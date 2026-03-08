@@ -1,7 +1,7 @@
 import { Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { CartItemProps } from "@/lib/types/cart";
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch } from "@/hooks/hooks";
 import { incrementQty, decrementQty } from "@/lib/store/cartSlice";
 
 export const CartItem = ({ item }: CartItemProps) => {
