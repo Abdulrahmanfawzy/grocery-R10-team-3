@@ -16,7 +16,7 @@ export default function CartDeliveryPromo() {
             </p>
             <div className="flex gap-2">
               <Input defaultValue="Save10" />
-              <Button variant="secondary">Apply Code</Button>
+              <Button variant="secondary" className="rounded-md text-base">Apply Code</Button>
             </div>
           </div>
           <Separator />
@@ -30,7 +30,7 @@ export default function CartDeliveryPromo() {
                 defaultValue="Villa 14, Street 23, District 5, New Cairo, Cairo"
                 className="text-xs"
               />
-              <Button variant="secondary">Edit</Button>
+              <Button variant="secondary" className="rounded-md text-base">Edit</Button>
             </div>
           </div>
         </CardContent>

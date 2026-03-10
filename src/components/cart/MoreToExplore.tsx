@@ -1,16 +1,14 @@
-import { useState } from "react";
-import { Minus, Plus, Trash2, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef } from "react";
+import { Minus, Plus, Trash2, Star, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-
-import spiroImg from "@/assets/spiro spathis.jpg";
-import v7Img from "@/assets/v7 cola  300ml.jpg";
-import nestleImg from "@/assets/nestle pure life 6l.jpg";
-import orangeImg from "@/assets/oranges.jpg";
+import { useCart } from "@/context/CartContext";
+import { useBestSells } from "@/hooks/useHomeData";
+import { getProductTitle, getPrice, getImageUrl, getProductCategory } from "@/lib/utils/product.utils";
 
 export interface ExploreItem {
-  id: number;
+  id: number | string;
   name: string;
   price: number;
   rating: number;
@@ -18,128 +16,201 @@ export interface ExploreItem {
   image?: string;
 }
 
-export const exploreItems: ExploreItem[] = [
-  { id: 1, name: "Spiro Spathis Lemon", price: 8.8,  rating: 4, tags: ["In Stock", "Save 20%", "New"], image: spiroImg },
-  { id: 2, name: "V7 Cola - 300Ml",     price: 15,   rating: 4, tags: ["In Stock"],                    image: v7Img },
-  { id: 3, name: "Nestlé Pure Life 6L", price: 60,   rating: 5, tags: ["In Stock"],                    image: nestleImg },
-  { id: 4, name: "Fresh Orange Juice",  price: 35,   rating: 4, tags: ["In Stock", "New"],             image: orangeImg },
-];
-
 interface MoreToExploreProps {
-  items?: ExploreItem[]; // Optional now since we can use internal exploreItems
+  items?: any[]; // Allow any for compatibility with API response
 }
 
-export default function MoreToExplore({ items = exploreItems }: MoreToExploreProps) {
-  const [quantities, setQuantities] = useState<Record<number, number>>({});
+export default function MoreToExplore({ items }: MoreToExploreProps) {
+  const { cart, addToCart, updateQuantity } = useCart();
+  const { data: bestSellsData, isLoading } = useBestSells();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const onQuantityChange = (id: number, delta: number) =>
-    setQuantities((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] ?? 0) + delta) }));
+  // If items not provided or empty, use best sells as fallback
+  const displayItems = (items && items.length > 0) ? items : (bestSellsData?.data || []);
+
+  const getItemQty = (id: number | string) => {
+    return cart.find(i => i.id === id)?.qty || 0;
+  };
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  if (isLoading && !items) {
+    return <div className="py-10 text-center text-gray-500">Loading suggestions...</div>;
+  }
 
   return (
-    <section>
-      <h2 className="font-semibold mb-4">More To Explore</h2>
+    <section className="mt-12 relative px-4">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-[#141212]">More To Explore</h2>
+      </div>
+
       <div className="relative">
+        {/* Navigation Buttons - Positioned on sides */}
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          className="absolute -left-5 top-1/2 -translate-y-1/2 z-10 border border-border bg-background shadow-sm"
+          className="absolute -left-6 top-1/2 -translate-y-1/2 z-20 rounded-full size-12 border-gray-100 bg-white hover:bg-[#014162] hover:text-white transition-all shadow-lg hidden md:flex text-gray-500"
+          onClick={() => scroll("left")}
         >
-          <ChevronLeft className="size-4" />
+          <ChevronLeft className="size-6" />
         </Button>
 
-        <div className="flex justify-center gap-4 overflow-x-auto pb-4 px-1 snap-x">
-          {items.map((item) => (
-            <Card key={item.id} className="min-w-[220px] max-w-[220px] shrink-0 py-4 snap-start">
-              <CardContent className="flex flex-col gap-3 px-4">
-                {/* Tags Container: Flex without wrap, scrolling horizontally if needed */}
-                <div className="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
-                  {item.tags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      className="text-[10px] bg-[#014162] text-white rounded-full shrink-0 whitespace-nowrap"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                
-                <div className="h-28 bg-muted rounded-lg flex items-center justify-center overflow-hidden border border-border">
-                  {item.image ? (
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
-                    <div className="text-3xl">🧃</div>
-                  )}
-                </div>
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute -right-6 top-1/2 -translate-y-1/2 z-20 rounded-full size-12 border-gray-100 bg-white hover:bg-[#014162] hover:text-white transition-all shadow-lg hidden md:flex text-gray-500"
+          onClick={() => scroll("right")}
+        >
+          <ChevronRight className="size-6" />
+        </Button>
 
-                <div className="flex justify-between items-start gap-2">
-                  <p className="text-xs font-medium line-clamp-2 flex-1">{item.name}</p>
-                  <span className="text-sm font-semibold whitespace-nowrap">£ {item.price}</span>
-                </div>
+        <div 
+          ref={scrollRef}
+          className="flex justify-start md:justify-start lg:justify-start gap-5 overflow-hidden pb-6 no-scrollbar snap-x transition-all scroll-smooth max-w-[285px] sm:max-w-[290px] md:max-w-[620px] lg:max-w-[910px] mx-auto"
+        >
+          {displayItems.map((item) => {
+            const id = item.id;
+            const title = getProductTitle(item);
+            const price = getPrice(item.discount_price && parseFloat(item.discount_price) > 0 ? item.discount_price : item.price);
+            const image = getImageUrl(item.image);
+            const category = getProductCategory(item);
+            const rating = getPrice(item.rating) || 4;
+            const qty = getItemQty(id);
+            const inStock = item.stock_quantity !== 0;
 
-                {/* Stars */}
-                <div className="flex gap-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star
-                      key={s}
-                      className={`size-3 ${
-                        s <= item.rating ? "fill-yellow-400 text-yellow-400" : "fill-muted text-muted"
-                      }`}
-                    />
-                  ))}
-                </div>
+            const tags = [];
+            if (inStock) tags.push("In Stock");
+            if (item.offer_title) tags.push(item.offer_title);
+            if (item.is_new) tags.push("New");
 
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="sm"
-                    className="flex-1 bg-[#014162] hover:bg-[#014162]/90 text-white text-xs"
-                    onClick={() => onQuantityChange(item.id, 1)}
-                  >
-                    Add To Cart
-                  </Button>
-                  <div className="flex items-center border border-border rounded-md overflow-hidden">
-                    <Button
-                      variant="ghost"
-                      size="icon-xs"
-                      className="rounded-none"
-                      onClick={() => onQuantityChange(item.id, -1)}
-                    >
-                      {(quantities[item.id] ?? 0) <= 1 ? (
-                        <Trash2 className="size-3" />
-                      ) : (
-                        <Minus className="size-3" />
-                      )}
-                    </Button>
-                    <span className="w-5 text-center text-xs font-medium">
-                      {quantities[item.id] ?? 0}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="icon-xs"
-                      className="rounded-none"
-                      onClick={() => onQuantityChange(item.id, 1)}
-                    >
-                      <Plus className="size-3" />
-                    </Button>
+            return (
+              <Card key={id} className="h-full flex flex-col min-w-[220px] sm:min-w-[200px] md:min-w-[300px] md:w-[300px] md:max-w-[300px] lg:min-w-0 lg:max-w-[290px] lg:w-[290px] max-w-[290px] sm:max-w-[200px] shrink-0 snap-start border-none shadow-md hover:shadow-xl transition-all duration-500 group overflow-hidden bg-white/50 backdrop-blur-sm min-h-[450px]">
+                <CardContent className="p-2 lg:p-3 flex flex-col flex-1">
+                  {/* Image Container */}
+                  <div className="relative aspect-square bg-[#F8F9FA] flex items-center justify-center p-6 overflow-hidden">
+                    {image ? (
+                      <img
+                        src={image}
+                        alt={title}
+                        className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="text-5xl">📦</div>
+                    )}
+                    
+                    {/* Tabs Container */}
+                    <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 overflow-hidden">
+                      {tags.map((tag, idx) => (
+                        <Badge
+                          key={idx}
+                          className={`text-[11px] md:text-xs text-white rounded-md shrink-0 whitespace-nowrap px-2 py-0.5 border-none shadow-sm font-bold ${
+                            tag.toLowerCase().includes('off') || tag.toLowerCase().includes('save') ? 'bg-[#014162]' : 'bg-[#014162]'
+                          }`}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute -right-5 top-1/2 -translate-y-1/2 z-10 border border-border bg-background shadow-sm"
-        >
-          <ChevronRight className="size-4" />
-        </Button>
+                  <div className="p-3 flex flex-col flex-1">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <h3 className="font-bold text-base text-gray-700 line-clamp-2 flex-1 group-hover:text-[#014162] transition-colors min-h-[40px]">
+                        {title}
+                      </h3>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="font-bold text-base text-gray-800">£ {price.toFixed(1)}</span>
+                        {(item.discount_price && parseFloat(item.discount_price) > 0) && (
+                          <span className="text-sm text-gray-400 line-through">£ {getPrice(item.price).toFixed(0)}</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-1 mb-4">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star
+                            key={s}
+                            className={`size-3.5 ${
+                              s <= rating ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs text-gray-400 font-medium">({rating}/5)</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-auto">
+                      <Button
+                        disabled={!inStock}
+                        className={`flex-1 flex items-center justify-center gap-2 h-9 rounded-md text-white text-sm font-bold px-2 transition-all duration-300 shadow-sm ${inStock ? 'bg-[#014162] hover:bg-[#013550]' : 'bg-gray-400 cursor-not-allowed'}`}
+                        onClick={() => addToCart({
+                          id,
+                          name: title,
+                          price,
+                          image,
+                          qty: 1,
+                          inStock: true
+                        })}
+                      >
+                        <ShoppingCart className="size-4 shrink-0" />
+                        <span>Add To Cart</span>
+                      </Button>
+
+                      <div className="flex items-center justify-between border border-gray-200 rounded-md h-9 px-1 gap-1 min-w-[90px] bg-white">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          disabled={qty === 0}
+                          className="size-7 rounded-sm text-gray-500 hover:bg-gray-100 shrink-0"
+                          onClick={() => qty > 0 && updateQuantity(id, -1)}
+                        >
+                          {qty === 1 ? <Trash2 className="size-3.5" /> : <Minus className="size-3.5" />}
+                        </Button>
+                        <span className="flex-1 text-center text-sm font-bold text-gray-700">
+                          {qty}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          disabled={!inStock}
+                          className="size-7 rounded-sm text-gray-500 hover:bg-gray-100 shrink-0"
+                          onClick={() => {
+                            if (qty === 0) {
+                              addToCart({
+                                id,
+                                name: title,
+                                price,
+                                image,
+                                qty: 1,
+                                inStock: true
+                              });
+                            } else {
+                              updateQuantity(id, 1);
+                            }
+                          }}
+                        >
+                          <Plus className="size-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 }
+
+export const exploreItems = []; // Keep for compatibility but it's now dynamic
