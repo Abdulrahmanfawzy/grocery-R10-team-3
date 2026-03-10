@@ -6,8 +6,13 @@ import {
   type ContactFormData,
 } from "@/lib/schemas/contact.schema";
 import { CircleCheck } from "lucide-react";
+import { useAppSelector, useAppDispatch } from "@/hooks/hooks";
+import { setContact } from "@/lib/store/checkoutSlice";
 
 export const ContactForm = () => {
+  const dispatch = useAppDispatch();
+  const savedContact = useAppSelector((state) => state.checkout.contact);
+
   const {
     register,
     handleSubmit,
@@ -15,17 +20,25 @@ export const ContactForm = () => {
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      phone: "",
-      email: "",
-      createAccount: false,
+      firstName: savedContact?.firstName ?? "",
+      lastName: savedContact?.lastName ?? "",
+      phone: savedContact?.phone ?? "",
+      email: savedContact?.email ?? "",
+      createAccount: savedContact?.createAccount ?? false,
     },
     mode: "onBlur",
   });
 
   const onSubmit = (data: ContactFormData) => {
-    console.log("Form Data:", data);
+    dispatch(
+      setContact({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        email: data.email,
+        createAccount: data.createAccount,
+      }),
+    );
   };
 
   return (

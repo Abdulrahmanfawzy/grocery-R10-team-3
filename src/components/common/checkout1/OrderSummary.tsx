@@ -1,10 +1,35 @@
-import { useAppSelector } from "@/hooks/hooks";
-import type { OrderSummaryProps } from "@/lib/types/cart";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { CartItem } from "../CartItem";
+import { getCart } from "@/lib/api/cartApi";
+import { useQuery } from "@tanstack/react-query";
+import { setCartItems } from "@/lib/store/cartSlice";
 
-export const OrderSummary = ({ cartItems = [] }: OrderSummaryProps) => {
-  const reduxCart = useAppSelector((state) => state.cart.items);
-  const items = reduxCart.length > 0 ? reduxCart : cartItems;
+export const OrderSummary = () => {
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
+
+  const { data: apiCart = [] } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+  });
+
+  useEffect(() => {
+    if (apiCart.length > 0 && cartItems.length === 0) {
+      const itemsForRedux = apiCart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        outOfStock: item.outOfStock,
+        image: item.image || "",
+      }));
+      dispatch(setCartItems(itemsForRedux));
+    }
+  }, [apiCart, dispatch, cartItems.length]);
+
+  const items =
+    cartItems.length > 0 ? cartItems : Array.isArray(apiCart) ? apiCart : [];
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const shipping = subtotal * 0.1;

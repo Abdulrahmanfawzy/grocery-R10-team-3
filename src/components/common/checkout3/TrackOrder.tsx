@@ -1,46 +1,67 @@
 import { Box, Check, CheckCircle2, MapPin, Truck } from "lucide-react";
+import { useAppSelector } from "@/hooks/hooks";
+import { useTrackOrderQuery } from "@/lib/api/checkoutQueries";
+
+const STEP_LABELS = [
+  "Order Placed",
+  "Processing",
+  "Shipped",
+  "Out for Delivery",
+  "Delivered",
+];
+const STEP_ICONS = [
+  <Check key="1" size={18} />,
+  <Box key="2" size={18} />,
+  <Truck key="3" size={18} />,
+  <MapPin key="4" size={18} />,
+  <CheckCircle2 key="5" size={18} />,
+];
+
 function TrackOrder() {
-  const steps = [
-    {
-      id: 1,
-      label: "Order Placed",
-      icon: <Check size={18} />,
-      status: "completed",
-    },
-    {
-      id: 2,
-      label: "Processing",
-      icon: <Box size={18} />,
-      status: "completed",
-    },
-    { id: 3, label: "Shipped", icon: <Truck size={18} />, status: "completed" },
-    {
-      id: 4,
-      label: "Out for Delivery",
-      icon: <MapPin size={18} />,
-      status: "active",
-    },
-    {
-      id: 5,
-      label: "Delivered",
-      icon: <CheckCircle2 size={18} />,
-      status: "pending",
-    },
-  ];
+  const lastOrderId = useAppSelector((state) => state.checkout.lastOrderId);
+  const {
+    data: trackData,
+    isLoading,
+    error,
+  } = useTrackOrderQuery(!!lastOrderId);
+
+  const stepsFromApi = trackData?.steps;
+  const currentStatus = trackData?.status ?? "Out for Delivery";
+  const estimatedDelivery = trackData?.estimated_delivery ?? "Today, Nov 4";
+
+  const steps = STEP_LABELS.map((label, i) => ({
+    id: i + 1,
+    label,
+    icon: STEP_ICONS[i],
+    status:
+      (stepsFromApi?.[i] as { status?: string } | undefined)?.status ??
+      (i < 3 ? "completed" : i === 3 ? "active" : "pending"),
+  }));
+
   return (
     <section>
       <h3 className="text-xl font-bold mb-4 text-[#1a1a1a]">
         Track Your Order
       </h3>
       <div className="border border-gray-100 rounded-2xl p-8 shadow-sm relative">
+        {isLoading && (
+          <p className="text-gray-400 text-sm">جاري تحميل حالة الطلب...</p>
+        )}
+        {error && (
+          <p className="text-amber-600 text-sm">
+            لا يمكن تحميل التتبع. تحقق من الاتصال.
+          </p>
+        )}
         <div className="flex justify-between items-start mb-10">
           <div>
             <p className="text-gray-400 text-sm">Current Status</p>
-            <p className="text-[#004a61] font-bold text-lg">Out for Delivery</p>
+            <p className="text-[#004a61] font-bold text-lg">{currentStatus}</p>
           </div>
           <div className="text-right">
             <p className="text-gray-400 text-sm">Estimated Delivery</p>
-            <p className="text-[#004a61] font-bold text-lg">Today, Nov 4</p>
+            <p className="text-[#004a61] font-bold text-lg">
+              {estimatedDelivery}
+            </p>
           </div>
         </div>
         <div className="relative flex justify-between items-center w-full px-4">

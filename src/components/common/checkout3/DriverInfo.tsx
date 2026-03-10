@@ -1,24 +1,49 @@
 import { MessageSquare, Phone, Star } from "lucide-react";
+import { useAppSelector } from "@/hooks/hooks";
+import { useOrderDetailsQuery } from "@/lib/api/checkoutQueries";
+
+const DEFAULT_DRIVER_IMAGE =
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop";
 
 function DriverInfo() {
+  const lastOrderId = useAppSelector((state) => state.checkout.lastOrderId);
+  const {
+    data: orderDetails,
+    isLoading,
+    error,
+  } = useOrderDetailsQuery(lastOrderId, !!lastOrderId);
+
+  const driver = orderDetails?.driver as
+    | { name?: string; phone?: string; image?: string }
+    | undefined;
+  const driverName = driver?.name ?? "Yousef Sheha";
+  const driverPhone = driver?.phone ?? "+20109 263 2833";
+  const driverImage = driver?.image ?? DEFAULT_DRIVER_IMAGE;
+
   return (
     <section>
       <h3 className="text-xl font-bold mb-4 text-[#1a1a1a]">
         Driver Information
       </h3>
+      {isLoading && (
+        <p className="text-gray-400 text-sm">جاري تحميل بيانات السائق...</p>
+      )}
+      {error && (
+        <p className="text-amber-600 text-sm">لا يمكن تحميل بيانات السائق.</p>
+      )}
       <div className="border border-gray-100 rounded-2xl shadow-sm overflow-hidden bg-white">
         <div className="p-8">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-100 border border-gray-100">
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"
+                src={driverImage}
                 alt="Driver"
                 className="w-full h-full object-cover"
               />
             </div>
 
             <div className="flex-1">
-              <h4 className="text-lg font-bold text-gray-800">Yousef Sheha</h4>
+              <h4 className="text-lg font-bold text-gray-800">{driverName}</h4>
               <div className="flex items-center gap-1 mt-1">
                 {[...Array(5)].map((_, i) => (
                   <Star
@@ -32,7 +57,7 @@ function DriverInfo() {
               <div className="mt-4 flex items-center gap-3">
                 <span className="text-gray-400 text-sm">Phone Number</span>
                 <div className="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-lg text-sm font-medium text-gray-700">
-                  +20109 263 2833
+                  {driverPhone}
                 </div>
               </div>
             </div>

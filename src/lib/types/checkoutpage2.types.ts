@@ -11,6 +11,8 @@ export interface MethodBadgeProps {
   label: string;
   sub: string;
   icon: React.ReactNode;
+  selected?: boolean;
+  onClick?: () => void;
 }
 
 export interface SummaryItemProps {

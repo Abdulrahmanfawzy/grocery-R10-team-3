@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axiosInstance";
 
 export interface SpecialNote {
   id: number;
-  note: string;
+  name: string;
 }
 
 export const getSpecialNotes = async (): Promise<SpecialNote[]> => {

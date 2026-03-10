@@ -1,17 +1,24 @@
 import { Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { CartItemProps } from "@/lib/types/cart";
-import { useAppDispatch } from "@/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { incrementQty, decrementQty } from "@/lib/store/cartSlice";
 
 export const CartItem = ({ item }: CartItemProps) => {
   const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const currentItem = cartItems.find((i) => i.id === item.id);
+  const quantity = currentItem?.quantity ?? item.quantity;
 
   const handleIncrement = () => {
     dispatch(incrementQty(item.id));
   };
 
   const handleDecrement = () => {
+    if (quantity <= 1) {
+      dispatch(decrementQty(item.id));
+      return;
+    }
     dispatch(decrementQty(item.id));
   };
 
@@ -46,7 +53,7 @@ export const CartItem = ({ item }: CartItemProps) => {
             >
               <Minus className="h-3 w-3" />
             </Button>
-            <span className="text-sm px-2">{item.quantity}</span>
+            <span className="text-sm px-2">{quantity}</span>
             <Button
               variant="ghost"
               size="icon"
@@ -57,7 +64,7 @@ export const CartItem = ({ item }: CartItemProps) => {
             </Button>
           </div>
           <span className="font-semibold text-sm">
-            £ {item.price * item.quantity}
+            £ {(item.price * quantity).toFixed(2)}
           </span>
         </div>
       </div>

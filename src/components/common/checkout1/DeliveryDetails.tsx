@@ -7,8 +7,13 @@ import {
   deliverySchema,
   type DeliveryFormData,
 } from "@/lib/schemas/delivery.schema";
+import { useAppSelector, useAppDispatch } from "@/hooks/hooks";
+import { setDelivery } from "@/lib/store/checkoutSlice";
 
 export const DeliveryDetails = () => {
+  const dispatch = useAppDispatch();
+  const savedDelivery = useAppSelector((state) => state.checkout.delivery);
+
   const {
     register,
     handleSubmit,
@@ -18,13 +23,13 @@ export const DeliveryDetails = () => {
   } = useForm<DeliveryFormData>({
     resolver: zodResolver(deliverySchema),
     defaultValues: {
-      fulfilmentMethod: "delivery",
-      address: "",
-      city: "",
-      provenance: "",
-      postalCode: "",
-      scheduleDelivery: "now",
-      deliverySpeed: "standard",
+      fulfilmentMethod: savedDelivery?.fulfilmentMethod ?? "delivery",
+      address: savedDelivery?.address ?? "",
+      city: savedDelivery?.city ?? "",
+      provenance: savedDelivery?.provenance ?? "",
+      postalCode: savedDelivery?.postalCode ?? "",
+      scheduleDelivery: savedDelivery?.scheduleDelivery ?? "now",
+      deliverySpeed: savedDelivery?.deliverySpeed ?? "standard",
     },
     mode: "onBlur",
   });
@@ -32,7 +37,19 @@ export const DeliveryDetails = () => {
   const selectedMethod = watch("fulfilmentMethod");
 
   const onSubmit = (data: DeliveryFormData) => {
-    console.log("Delivery Data:", data);
+    dispatch(
+      setDelivery({
+        fulfilmentMethod: data.fulfilmentMethod,
+        address: data.address,
+        city: data.city,
+        provenance: data.provenance,
+        postalCode: data.postalCode,
+        scheduleDelivery: data.scheduleDelivery,
+        deliverySpeed: data.deliverySpeed,
+        estimatedArrival: savedDelivery?.estimatedArrival,
+        addressId: savedDelivery?.addressId,
+      }),
+    );
   };
 
   return (

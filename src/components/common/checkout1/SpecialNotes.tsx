@@ -5,11 +5,16 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getSpecialNotes } from "../../../lib/api/SpecialNotesApi";
+import { useAppSelector, useAppDispatch } from "@/hooks/hooks";
+import { setNotes } from "@/lib/store/checkoutSlice";
 
 export const SpecialNotes = () => {
+  const dispatch = useAppDispatch();
+  const savedNotes = useAppSelector((state) => state.checkout.notes);
+
   const { register, setValue, watch, handleSubmit } = useForm({
     defaultValues: {
-      specialNotes: "",
+      specialNotes: savedNotes?.notes ?? "",
     },
   });
 
@@ -26,16 +31,20 @@ export const SpecialNotes = () => {
 
   const addNote = (note: string) => {
     const newNote = currentNotes ? `${currentNotes.trim()}, ${note}` : note;
-
     setValue("specialNotes", newNote, { shouldValidate: true });
   };
-
-  const onSubmit = (data: { specialNotes: string }) => {
-    console.log("Notes Submitted:", data);
-  };
   const navigate = useNavigate();
+  const onSubmit = (data: { specialNotes: string }) => {
+    dispatch(
+      setNotes({
+        notes: data.specialNotes || "",
+        specialNoteId: savedNotes?.specialNoteId ?? null,
+      }),
+    );
+    navigate("/checkout2");
+  };
 
-  const commonNotes = specialNotes?.map((note) => note.note) || [];
+  const commonNotes = Array.isArray(specialNotes) ? specialNotes : [];
 
   return (
     <section>
@@ -51,12 +60,12 @@ export const SpecialNotes = () => {
             ) : (
               commonNotes.map((note) => (
                 <Badge
-                  key={note}
+                  key={note.id}
                   variant="outline"
                   className="py-3 px-5 font-normal text-gray-500 border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer text-sm transition-all active:scale-95 select-none"
-                  onClick={() => addNote(note)}
+                  onClick={() => addNote(note.name)}
                 >
-                  {note}
+                  {note.name}
                 </Badge>
               ))
             )}
@@ -73,7 +82,6 @@ export const SpecialNotes = () => {
 
         <div className="mt-10">
           <Button
-            onClick={() => navigate("/checkout2")}
             type="submit"
             className="w-full md:w-72 bg-[#004a61] hover:bg-[#003649] h-12 text-lg rounded-lg font-semibold"
           >
