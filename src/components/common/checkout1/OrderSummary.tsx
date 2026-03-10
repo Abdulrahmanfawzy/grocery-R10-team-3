@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/lib/store/hooks";
+import { useAppSelector } from "@/hooks/hooks";
 import type { OrderSummaryProps } from "@/lib/types/cart";
 import { CartItem } from "../CartItem";
 

@@ -6,33 +6,36 @@ import {
   LayoutGrid,
   ChevronDown,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
 
 const Navbar = () => {
+  const { cartCount } = useCart();
   return (
     <nav className="w-full bg-white border-b border-gray-100 py-3 px-4 md:px-8">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        <div className="flex items-center gap-1 min-w-fit">
+        <Link to="/" className="flex items-center gap-1 min-w-fit hover:opacity-80 transition-opacity">
           <span className="text-2xl font-black text-[#004a61] tracking-tighter flex items-center">
             Gr<span className="text-[#004a61]">o</span>cery{" "}
             <sup className="text-[#004a61] ml-1 text-2xl">+</sup>
           </span>
-        </div>
+        </Link>
 
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="flex items-center gap-1.5 hover:text-[#004a61]"
           >
             <Home size={18} /> Home
-          </a>
-          <a
-            href="/categories"
+          </Link>
+          <Link
+            to="/categories"
             className="flex items-center gap-1.5 hover:text-[#004a61]"
           >
             <LayoutGrid size={18} /> Categories
-          </a>
+          </Link>
         </div>
 
         <div className="flex-1 max-w-2xl hidden sm:flex items-center gap-0">
@@ -51,25 +54,25 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="relative flex items-center gap-2 cursor-pointer group">
+          <Link to="/cart" className="relative flex items-center gap-2 cursor-pointer group">
             <div className="relative">
               <ShoppingCart
                 size={24}
                 className="text-slate-400 group-hover:text-[#004a61]"
               />
               <span className="absolute -top-1 -right-1 bg-gray-200 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                3
+                {cartCount}
               </span>
             </div>
             <span className="hidden lg:block text-sm font-medium text-slate-600">
               My cart
             </span>
-          </div>
+          </Link>
 
-          <Button className="bg-[#004a61] hover:bg-[#003649] flex items-center gap-2 rounded-md px-4 h-10">
+          <Link to="/profile" className="bg-[#004a61] hover:bg-[#003649] flex items-center gap-2 rounded-md px-4 h-10 text-white text-sm font-medium transition-colors">
             <User size={18} />
             <span className="text-sm font-medium">Sarah's Profile</span>
-          </Button>
+          </Link>
         </div>
       </div>
     </nav>

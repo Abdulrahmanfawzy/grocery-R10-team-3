@@ -1,39 +1,63 @@
-import ProductList from "./pages/productList/ProductList";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState, useEffect, type ReactNode } from "react";
+import Home from "./pages/Home";
 import Cart from "./pages/Cart";
-import Footer from "./components/layout/Footer";
-import Navbar from "./components/layout/Navbar";
+import MainLayout from "./components/layout/MainLayout";
+import { CartProvider } from "./context/CartContext";
 
-import CheckoutPage1 from "./pages/CheckoutPage1";
-import CheckoutPage2 from "./pages/CheckoutPage2";
-import CheckoutPage3 from "./pages/CheckoutPage3";
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
-import Autho from "./components/autho/Autho";
-import Account from "./components/account/Account";
 
-import Recovery from "./components/recovery/Recovery";
-import Choose from "./components/choose/Choose";
-import "./index.css";
+const AuthInitializer = ({ children }: { children: ReactNode }) => {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {  
+      // Set the fixed token requested by the user  
+      const fixedToken = "355|DaHfhqKU7rcbUYuq0GJSOiyZVT4c0QHWU7ENaoSP141eb587";
+      localStorage.setItem("token", fixedToken);
+      console.log("[Auth] Fixed token set in localStorage.");
+      setIsReady(true);
+    };
+    init();
+  }, []);
+
+  if (!isReady) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <div style={{ fontSize: "1.2rem", color: "#555" }}>Loading...</div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+};
 
 const App = () => {
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Cart />} />
-          <Route path="/shop" element={<ProductList />} />
-          <Route path="/checkout1" element={<CheckoutPage1 />} />
-          <Route path="/checkout2" element={<CheckoutPage2 />} />
-          <Route path="/checkout3" element={<CheckoutPage3 />} />
-          <Route path="/login" element={<Autho />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/Choose" element={<Choose />} />
-          <Route path="/Recovery" element={<Recovery />} />
-        </Routes>
+        <AuthInitializer>
+          <CartProvider>
+            <MainLayout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="*" element={<div className="p-20 text-center">Page Not Found</div>} />
+              </Routes>
+            </MainLayout>
+          </CartProvider>
+        </AuthInitializer>
       </BrowserRouter>
-      <Footer />
-    </div>
+    </QueryClientProvider>
   );
 };
 

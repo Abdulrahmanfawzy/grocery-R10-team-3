@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getSpecialNotes } from "../../../lib/api/SpecialNotesApi";
 
 export const SpecialNotes = () => {
   const { register, setValue, watch, handleSubmit } = useForm({
@@ -12,6 +14,15 @@ export const SpecialNotes = () => {
   });
 
   const currentNotes = watch("specialNotes") || "";
+
+  const {
+    data: specialNotes,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["specialNotes"],
+    queryFn: getSpecialNotes,
+  });
 
   const addNote = (note: string) => {
     const newNote = currentNotes ? `${currentNotes.trim()}, ${note}` : note;
@@ -24,11 +35,7 @@ export const SpecialNotes = () => {
   };
   const navigate = useNavigate();
 
-  const commonNotes = [
-    "Leave order Infront Of The Door",
-    "Don't Ring Bell",
-    "Call 30 min In Advance",
-  ];
+  const commonNotes = specialNotes?.map((note) => note.note) || [];
 
   return (
     <section>
@@ -37,16 +44,22 @@ export const SpecialNotes = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="border border-gray-100 p-8 rounded-2xl space-y-6 bg-white shadow-sm">
           <div className="flex flex-wrap gap-4">
-            {commonNotes.map((note) => (
-              <Badge
-                key={note}
-                variant="outline"
-                className="py-3 px-5 font-normal text-gray-500 border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer text-sm transition-all active:scale-95 select-none"
-                onClick={() => addNote(note)}
-              >
-                {note}
-              </Badge>
-            ))}
+            {isLoading ? (
+              <p className="text-gray-400 text-sm">Loading notes...</p>
+            ) : error ? (
+              <p className="text-red-400 text-sm">Failed to load notes</p>
+            ) : (
+              commonNotes.map((note) => (
+                <Badge
+                  key={note}
+                  variant="outline"
+                  className="py-3 px-5 font-normal text-gray-500 border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer text-sm transition-all active:scale-95 select-none"
+                  onClick={() => addNote(note)}
+                >
+                  {note}
+                </Badge>
+              ))
+            )}
           </div>
 
           <div className="pt-2">
