@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@tailwind utilities;
+/* @tailwind utilities; - Not needed in TW4 */
 
 /* getting error here */
-@import "tw-animate-css";
+/* @import "tw-animate-css"; */
 @layer components {
   .progess {
     background: linear-gradient(
@@ -18,6 +18,13 @@
   }
   .box-light {
     @apply rounded-xl border border-[0.8px]  border-[#DAD8D8];
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
