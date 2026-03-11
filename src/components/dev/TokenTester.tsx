@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const TOKEN_KEY = "token";
+const TOKEN_KEY = "420|vOvDUhVeBvS9evKF0kkke2dD20ahRMd10vLb4lNm9619ecb1";
 
 export function TokenTester() {
   const [token, setToken] = useState("");
