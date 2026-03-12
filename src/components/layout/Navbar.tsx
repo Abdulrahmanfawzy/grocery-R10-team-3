@@ -5,6 +5,7 @@ import {
   Home,
   LayoutGrid,
   ChevronDown,
+  User2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,10 @@ const Navbar = () => {
   return (
     <nav className="w-full bg-white border-b border-gray-100 py-3 px-4 md:px-8">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-1 min-w-fit hover:opacity-80 transition-opacity">
+        <Link
+          to="/"
+          className="flex items-center gap-1 min-w-fit hover:opacity-80 transition-opacity"
+        >
           <span className="text-2xl font-black text-[#004a61] tracking-tighter flex items-center">
             Gr<span className="text-[#004a61]">o</span>cery{" "}
             <sup className="text-[#004a61] ml-1 text-2xl">+</sup>
@@ -54,7 +58,10 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link to="/cart" className="relative flex items-center gap-2 cursor-pointer group">
+          <Link
+            to="/cart"
+            className="relative flex items-center gap-2 cursor-pointer group"
+          >
             <div className="relative">
               <ShoppingCart
                 size={24}
@@ -69,9 +76,13 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <Link to="/profile" className="bg-[#004a61] hover:bg-[#003649] flex items-center gap-2 rounded-md px-4 h-10 text-white text-sm font-medium transition-colors">
-            <User size={18} />
-            <span className="text-sm font-medium">Sarah's Profile</span>
+          <Link
+            to="/profile"
+            className="bg-[#004a61] hover:bg-[#003649] flex items-center gap-2 rounded-md px-4 h-10 text-white text-sm font-medium transition-colors"
+          >
+            <span className="text-sm font-medium">
+              <User size={18} />
+            </span>
           </Link>
         </div>
       </div>
