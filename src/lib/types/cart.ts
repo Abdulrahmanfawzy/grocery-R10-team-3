@@ -9,6 +9,7 @@ export interface CartItemType {
 
 export interface CartItemProps {
   item: CartItemType;
+  onUpdateQuantity?: (delta: number) => void;
 }
 export interface OrderSummaryProps {
   cartItems?: CartItemType[];
