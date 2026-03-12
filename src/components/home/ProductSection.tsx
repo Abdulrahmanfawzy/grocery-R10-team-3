@@ -36,10 +36,10 @@ const ProductSection = ({ title }: ProductSectionProps) => {
   return (
     <section>
       <Tabs defaultValue="All" className="w-full">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col gap-4 mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-[#141212]">{title}</h2>
-          <div className="flex items-center w-full lg:w-auto">
-            <TabsList className="h-auto p-0 gap-4 sm:gap-6 lg:gap-8 overflow-x-auto no-scrollbar bg-transparent border-none w-full lg:w-auto justify-start lg:justify-center">
+          <div className="flex justify-end">
+            <TabsList className="h-auto p-0 gap-2 sm:gap-3 lg:gap-4 overflow-x-auto no-scrollbar bg-transparent border-none w-full lg:w-auto justify-start lg:justify-center">
             {CATEGORY_SEQUENCE.map((cat) => (
               <TabsTrigger
                 key={cat}

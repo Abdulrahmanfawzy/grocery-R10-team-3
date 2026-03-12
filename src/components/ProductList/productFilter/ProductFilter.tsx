@@ -49,7 +49,7 @@ const ProductFilter = () => {
                 <img
                   src={cat.icon}
                   alt={cat.name}
-                  className="w-[24px] h-[24px] object-contain flex-shrink-0"
+                  className="w-[24px] h-[24px] object-contain shrink-0"
                 />
 
                 <span className="text-[16px] font-normal text-[#0E1112] leading-[24px]">
@@ -69,15 +69,15 @@ const ProductFilter = () => {
               <input type="checkbox"
                 className="w-[14px] h-[14px] 
                         rounded-[2px] 
-                        border-[1px] border-[#B0AEAE] 
+                        border border-[#B0AEAE] 
                         appearance-none 
-                        checked:bg-[#014162] checked:border-[#014162] 
+                        checked:bg-blue-900 checked:border-blue-900 
                         cursor-pointer 
                         transition-all duration-200
                         relative
                         after:content-[''] after:hidden checked:after:block
-                        after:absolute after:left-[4px] after:top-[1px]
-                        after:w-[4px] after:h-[8px] 
+                        after:absolute after:left-1 after:top-px
+                        after:w-1 after:h-2 
                         after:border-white after:border-r-2 after:border-b-2 
                         after:rotate-45"
               />
@@ -95,15 +95,15 @@ const ProductFilter = () => {
               <input type="checkbox"
                 className="w-[14px] h-[14px] 
                         rounded-[2px] 
-                        border-[1px] border-[#B0AEAE] 
+                        border border-[#B0AEAE] 
                         appearance-none 
-                        checked:bg-[#014162] checked:border-[#014162] 
+                        checked:bg-blue-900 checked:border-blue-900 
                         cursor-pointer 
                         transition-all duration-200
                         relative
                         after:content-[''] after:hidden checked:after:block
-                        after:absolute after:left-[4px] after:top-[1px]
-                        after:w-[4px] after:h-[8px] 
+                        after:absolute after:left-1 after:top-px
+                        after:w-1 after:h-2 
                         after:border-white after:border-r-2 after:border-b-2 
                         after:rotate-45"
               />
@@ -121,15 +121,15 @@ const ProductFilter = () => {
               <input type="checkbox"
                 className="w-[14px] h-[14px] 
                         rounded-[2px] 
-                        border-[1px] border-[#B0AEAE] 
+                        border border-[#B0AEAE] 
                         appearance-none 
-                        checked:bg-[#014162] checked:border-[#014162] 
+                        checked:bg-blue-900 checked:border-blue-900 
                         cursor-pointer 
                         transition-all duration-200
                         relative
                         after:content-[''] after:hidden checked:after:block
-                        after:absolute after:left-[4px] after:top-[1px]
-                        after:w-[4px] after:h-[8px] 
+                        after:absolute after:left-1 after:top-px
+                        after:w-1 after:h-2 
                         after:border-white after:border-r-2 after:border-b-2 
                         after:rotate-45"
               />
@@ -155,7 +155,7 @@ const ProductFilter = () => {
                 w-full h-full 
                 bg-[#D9D9D9] 
                 rounded-[8px] 
-                border-[2px] border-[#E4ECF2] 
+                border-2 border-[#E4ECF2] 
                 pl-[22px] pr-[70px] 
                 text-[12px] font-semibold text-[#071C1F] 
                 outline-none 
@@ -165,7 +165,7 @@ const ProductFilter = () => {
 
             <button className="absolute right-0 
                             w-[58px] h-[58px] 
-                            bg-[#014162] 
+                            bg-blue-900 
                             rounded-r-[8px] 
                             flex items-center justify-center 
                             cursor-pointer 

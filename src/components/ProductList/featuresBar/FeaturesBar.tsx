@@ -34,7 +34,7 @@ const FeaturesBar = () => {
       {features.map((feature, index) => (
         <div key={index} className="flex items-center flex-1 group">
           <div className="flex items-center gap-[16px] px-[20px]">
-            <div className="text-[#014162] flex-shrink-0">
+            <div className="text-blue-900 flex-shrink-0">
                <div className="flex items-center justify-center">
                  <img src={feature.icon} alt={feature.title} />
                </div>
@@ -51,7 +51,7 @@ const FeaturesBar = () => {
           </div>
 
           {index !== features.length - 1 && (
-            <div className="h-[80px] w-[1px] bg-[#E5EAEE]"></div>
+            <div className="h-[80px] w-px bg-[#E5EAEE]"></div>
           )}
         </div>
       ))}
