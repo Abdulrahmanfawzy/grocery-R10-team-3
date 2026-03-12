@@ -69,9 +69,9 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <Link to="/profile" className="bg-[#004a61] hover:bg-[#003649] flex items-center gap-2 rounded-md px-4 h-10 text-white text-sm font-medium transition-colors">
+          <Link to="/profile" className="bg-[#004a61] hover:bg-[#003649] flex items-center gap-2 rounded-md px-2 sm:px-4 h-10 text-white text-sm font-medium transition-colors">
             <User size={18} />
-            <span className="text-sm font-medium">Sarah's Profile</span>
+            <span className="hidden sm:block text-sm font-medium">Sarah's Profile</span>
           </Link>
         </div>
       </div>
