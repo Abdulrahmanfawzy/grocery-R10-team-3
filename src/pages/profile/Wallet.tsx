@@ -1,5 +1,5 @@
 import PaymentHistory from "@/components/profile/payment/PaymentHistory";
-import PaymentsMethod from "@/components/profile/payment/PaymentSMethod";
+import PaymentsMethod from "@/components/profile/payment/PaymentsMethod";
 import { Button } from "@/components/ui/button";
 import { useGetDashboard } from "@/lib/api/profile/dashboardApi/use-getDashboard";
 import { useGetPaymentsHistory } from "@/lib/api/profile/paymentsApi/use-getPayments";
