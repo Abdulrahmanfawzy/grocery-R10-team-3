@@ -1,53 +1,59 @@
-import { useState } from 'react';
-import './ProductFilter.module.css';
-import { Slider } from "@/components/ui/slider"
-import vegIcon from '@/assets/icons/categories/veg-icon.svg';
-import fruitIcon from '@/assets/icons/categories/fruit-icon.svg';
-import dairyIcon from '@/assets/icons/categories/dairy-icon.svg';
-import bakeryIcon from '@/assets/icons/categories/bakery-icon.svg';
-import seafoodIcon from '@/assets/icons/categories/seafood-icon.svg';
-import meatsIcon from '@/assets/icons/categories/meats-icon.svg';
-import searchIcon from '@/assets/icons/search-icon.svg';
-import styles from './ProductFilter.module.css';
+import { useState } from "react";
+import "./ProductFilter.module.css";
+import { Slider } from "@/components/ui/slider";
+import vegIcon from "@/assets/icons/categories/veg-icon.svg";
+import fruitIcon from "@/assets/icons/categories/fruit-icon.svg";
+import dairyIcon from "@/assets/icons/categories/dairy-icon.svg";
+import bakeryIcon from "@/assets/icons/categories/bakery-icon.svg";
+import seafoodIcon from "@/assets/icons/categories/seafood-icon.svg";
+import meatsIcon from "@/assets/icons/categories/meats-icon.svg";
+import searchIcon from "@/assets/icons/search-icon.svg";
+import styles from "./ProductFilter.module.css";
+import { useCategory } from "@/hooks/useCategory";
+import { useSearchParams } from "react-router-dom";
 
 const ProductFilter = () => {
+  const { categories, isLoading } = useCategory();
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const selectedCat = searchParams.get("category_id");
+  // const categories = [
+  //   { id: "veg", name: "Vegetables", icon: vegIcon },
+  //   { id: "fruit", name: "Fruites", icon: fruitIcon },
+  //   { id: "dairy", name: "Dairy & Eggs", icon: dairyIcon },
+  //   { id: "bakery", name: "Bakery", icon: bakeryIcon },
+  //   { id: "seafood", name: "Seafood", icon: seafoodIcon },
+  //   { id: "meats", name: "Meats", icon: meatsIcon },
+  // ];
 
-  const categories = [
-    { id: 'veg', name: 'Vegetables', icon: vegIcon },
-    { id: 'fruit', name: 'Fruites', icon: fruitIcon },
-    { id: 'dairy', name: 'Dairy & Eggs', icon: dairyIcon },
-    { id: 'bakery', name: 'Bakery', icon: bakeryIcon },
-    { id: 'seafood', name: 'Seafood', icon: seafoodIcon },
-    { id: 'meats', name: 'Meats', icon: meatsIcon },
-  ];
+  const brands = ["Brand A", "Brand B", "Brand C"];
 
-  const [selectedCat, setSelectedCat] = useState('fruit');
-
-  const brands = ['Brand A', 'Brand B', 'Brand C'];
-
-  const types = ['Fresh', 'Organic', 'Frozen'];
+  const types = ["Fresh", "Organic", "Frozen"];
 
   return (
     <aside className="bg-[#F7FCFF] rounded-[8px] py-[16px] shadow-sm">
       <div className="mb-8">
-        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">Categories</h3>
+        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">
+          Categories
+        </h3>
         <div className="flex flex-col">
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setSelectedCat(cat.id)}
+              onClick={() => {
+                setSearchParams({ category_id: cat.id.toString() });
+              }}
               className={`flex items-center p-[12px] px-[16px] w-full 
                 transition-all duration-200 rounded-[4px] cursor-pointer group
-                  ${selectedCat === cat.id
-                  ? 'bg-white shadow-sm text-[#000000]'
-                  : 'text-[#0E1112] hover:bg-white/80'
-                }`
-              }
+                  ${
+                    selectedCat === cat.id
+                      ? "bg-white shadow-sm text-[#000000]"
+                      : "text-[#0E1112] hover:bg-white/80"
+                  }`}
             >
               <div className="flex items-center gap-[16px]">
                 <img
-                  src={cat.icon}
+                  src={cat.image_url}
                   alt={cat.name}
                   className="w-[24px] h-[24px] object-contain flex-shrink-0"
                 />
@@ -62,11 +68,17 @@ const ProductFilter = () => {
       </div>
 
       <div className="mb-8">
-        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">Brand</h3>
+        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">
+          Brand
+        </h3>
         <div className="space-y-2 px-[16px]">
           {brands.map((brand) => (
-            <label key={brand} className="flex items-center gap-[12px] cursor-pointer group">
-              <input type="checkbox"
+            <label
+              key={brand}
+              className="flex items-center gap-[12px] cursor-pointer group"
+            >
+              <input
+                type="checkbox"
                 className="w-[14px] h-[14px] 
                         rounded-[2px] 
                         border-[1px] border-[#B0AEAE] 
@@ -81,18 +93,26 @@ const ProductFilter = () => {
                         after:border-white after:border-r-2 after:border-b-2 
                         after:rotate-45"
               />
-              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">{brand}</span>
+              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">
+                {brand}
+              </span>
             </label>
           ))}
         </div>
       </div>
 
       <div className="mb-8">
-        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">Product Type</h3>
+        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">
+          Product Type
+        </h3>
         <div className="space-y-2 px-[16px]">
           {types.map((type) => (
-            <label key={type} className="flex items-center gap-[12px] cursor-pointer group">
-              <input type="checkbox"
+            <label
+              key={type}
+              className="flex items-center gap-[12px] cursor-pointer group"
+            >
+              <input
+                type="checkbox"
                 className="w-[14px] h-[14px] 
                         rounded-[2px] 
                         border-[1px] border-[#B0AEAE] 
@@ -107,18 +127,26 @@ const ProductFilter = () => {
                         after:border-white after:border-r-2 after:border-b-2 
                         after:rotate-45"
               />
-              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">{type}</span>
+              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">
+                {type}
+              </span>
             </label>
           ))}
         </div>
       </div>
 
       <div className="mb-8">
-        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">Availability</h3>
+        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">
+          Availability
+        </h3>
         <div className="space-y-2 px-[16px]">
-          {['In Stock', 'Out of Stock'].map((value) => (
-            <label key={value} className="flex items-center gap-[12px] cursor-pointer group">
-              <input type="checkbox"
+          {["In Stock", "Out of Stock"].map((value) => (
+            <label
+              key={value}
+              className="flex items-center gap-[12px] cursor-pointer group"
+            >
+              <input
+                type="checkbox"
                 className="w-[14px] h-[14px] 
                         rounded-[2px] 
                         border-[1px] border-[#B0AEAE] 
@@ -133,7 +161,9 @@ const ProductFilter = () => {
                         after:border-white after:border-r-2 after:border-b-2 
                         after:rotate-45"
               />
-              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">{value}</span>
+              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">
+                {value}
+              </span>
             </label>
           ))}
         </div>
@@ -146,7 +176,7 @@ const ProductFilter = () => {
           Search Objects
         </h3>
 
-        <div className='px-[16px]'>
+        <div className="px-[16px]">
           <div className="relative flex items-center w-full h-[60px]">
             <input
               type="text"
@@ -163,7 +193,8 @@ const ProductFilter = () => {
               "
             />
 
-            <button className="absolute right-0 
+            <button
+              className="absolute right-0 
                             w-[58px] h-[58px] 
                             bg-[#014162] 
                             rounded-r-[8px] 
@@ -172,7 +203,11 @@ const ProductFilter = () => {
                             hover:bg-[#013550] 
                             transition-colors"
             >
-              <img src={searchIcon} alt="Search" className="w-[24px] h-[24px]" />
+              <img
+                src={searchIcon}
+                alt="Search"
+                className="w-[24px] h-[24px]"
+              />
             </button>
           </div>
         </div>
@@ -186,8 +221,12 @@ const ProductFilter = () => {
         </h3>
         <div className="px-[16px]">
           <div className="flex justify-between items-center mb-[20px]">
-            <span className="text-[16px] font-normal text-[#0E1112]">Your range:</span>
-            <span className="text-[16px] font-bold text-[#071C1F]">£50 - £80</span>
+            <span className="text-[16px] font-normal text-[#0E1112]">
+              Your range:
+            </span>
+            <span className="text-[16px] font-bold text-[#071C1F]">
+              £50 - £80
+            </span>
           </div>
           <Slider
             defaultValue={[25, 50]}
