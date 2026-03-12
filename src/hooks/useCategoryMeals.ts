@@ -2,7 +2,12 @@ import type { MealsData } from "@/components/Types/Category";
 import { getCategoriesDetails } from "@/lib/api/Categoty";
 import { useEffect, useState } from "react";
 
-export const useCategoryMeals = (categoryId: number, searchTerm?: string) => {
+export const useCategoryMeals = (
+  categoryId: number,
+  searchTerm?: string,
+  stock?: string,
+  brand?: string,
+) => {
   const [mealsData, setMealsData] = useState<MealsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -11,7 +16,12 @@ export const useCategoryMeals = (categoryId: number, searchTerm?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await getCategoriesDetails(categoryId, searchTerm);
+      const response = await getCategoriesDetails(
+        categoryId,
+        searchTerm,
+        stock,
+        brand,
+      );
       if (response.success) {
         setMealsData(response.data);
       }
@@ -25,7 +35,7 @@ export const useCategoryMeals = (categoryId: number, searchTerm?: string) => {
 
   useEffect(() => {
     fetchCategoryMeals();
-  }, [categoryId, searchTerm]);
+  }, [categoryId, searchTerm, stock, brand]);
 
   return {
     category: mealsData?.category,

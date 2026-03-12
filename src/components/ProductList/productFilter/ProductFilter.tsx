@@ -1,32 +1,15 @@
-import { useState } from "react";
 import "./ProductFilter.module.css";
 import { Slider } from "@/components/ui/slider";
-import vegIcon from "@/assets/icons/categories/veg-icon.svg";
-import fruitIcon from "@/assets/icons/categories/fruit-icon.svg";
-import dairyIcon from "@/assets/icons/categories/dairy-icon.svg";
-import bakeryIcon from "@/assets/icons/categories/bakery-icon.svg";
-import seafoodIcon from "@/assets/icons/categories/seafood-icon.svg";
-import meatsIcon from "@/assets/icons/categories/meats-icon.svg";
 import searchIcon from "@/assets/icons/search-icon.svg";
 import styles from "./ProductFilter.module.css";
 import { useCategory } from "@/hooks/useCategory";
 import { useSearchParams } from "react-router-dom";
 
 const ProductFilter = () => {
-  const { categories, isLoading } = useCategory();
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const { categories, isLoading } = useCategory();
   const selectedCat = searchParams.get("category_id");
-  // const categories = [
-  //   { id: "veg", name: "Vegetables", icon: vegIcon },
-  //   { id: "fruit", name: "Fruites", icon: fruitIcon },
-  //   { id: "dairy", name: "Dairy & Eggs", icon: dairyIcon },
-  //   { id: "bakery", name: "Bakery", icon: bakeryIcon },
-  //   { id: "seafood", name: "Seafood", icon: seafoodIcon },
-  //   { id: "meats", name: "Meats", icon: meatsIcon },
-  // ];
-
-  const brands = ["Brand A", "Brand B", "Brand C"];
+  const brands = ["Premium"];
 
   const types = ["Fresh", "Organic", "Frozen"];
 
@@ -41,7 +24,9 @@ const ProductFilter = () => {
             <button
               key={cat.id}
               onClick={() => {
-                setSearchParams({ category_id: cat.id.toString() });
+                const params = new URLSearchParams(searchParams);
+                params.set("category_id", cat.id.toString());
+                setSearchParams(params);
               }}
               className={`flex items-center p-[12px] px-[16px] w-full 
                 transition-all duration-200 rounded-[4px] cursor-pointer group
@@ -72,32 +57,49 @@ const ProductFilter = () => {
           Brand
         </h3>
         <div className="space-y-2 px-[16px]">
-          {brands.map((brand) => (
-            <label
-              key={brand}
-              className="flex items-center gap-[12px] cursor-pointer group"
-            >
-              <input
-                type="checkbox"
-                className="w-[14px] h-[14px] 
-                        rounded-[2px] 
-                        border-[1px] border-[#B0AEAE] 
-                        appearance-none 
-                        checked:bg-[#014162] checked:border-[#014162] 
-                        cursor-pointer 
-                        transition-all duration-200
-                        relative
-                        after:content-[''] after:hidden checked:after:block
-                        after:absolute after:left-[4px] after:top-[1px]
-                        after:w-[4px] after:h-[8px] 
-                        after:border-white after:border-r-2 after:border-b-2 
-                        after:rotate-45"
-              />
-              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">
-                {brand}
-              </span>
-            </label>
-          ))}
+          {brands.map((brand) => {
+            const selectedBrand = searchParams.get("brand");
+
+            return (
+              <label
+                key={brand}
+                className="flex items-center gap-[12px] cursor-pointer group"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedBrand === brand}
+                  onChange={(e) => {
+                    const params = new URLSearchParams(searchParams);
+
+                    if (e.target.checked) {
+                      params.set("brand", brand);
+                    } else {
+                      params.delete("brand");
+                    }
+
+                    setSearchParams(params);
+                  }}
+                  className="w-[14px] h-[14px] 
+          rounded-[2px] 
+          border-[1px] border-[#B0AEAE] 
+          appearance-none 
+          checked:bg-[#014162] checked:border-[#014162] 
+          cursor-pointer 
+          transition-all duration-200
+          relative
+          after:content-[''] after:hidden checked:after:block
+          after:absolute after:left-[4px] after:top-[1px]
+          after:w-[4px] after:h-[8px] 
+          after:border-white after:border-r-2 after:border-b-2 
+          after:rotate-45"
+                />
+
+                <span className="text-[16px] font-normal text-[#000000] leading-[24px]">
+                  {brand}
+                </span>
+              </label>
+            );
+          })}
         </div>
       </div>
 
@@ -140,32 +142,51 @@ const ProductFilter = () => {
           Availability
         </h3>
         <div className="space-y-2 px-[16px]">
-          {["In Stock", "Out of Stock"].map((value) => (
-            <label
-              key={value}
-              className="flex items-center gap-[12px] cursor-pointer group"
-            >
-              <input
-                type="checkbox"
-                className="w-[14px] h-[14px] 
-                        rounded-[2px] 
-                        border-[1px] border-[#B0AEAE] 
-                        appearance-none 
-                        checked:bg-[#014162] checked:border-[#014162] 
-                        cursor-pointer 
-                        transition-all duration-200
-                        relative
-                        after:content-[''] after:hidden checked:after:block
-                        after:absolute after:left-[4px] after:top-[1px]
-                        after:w-[4px] after:h-[8px] 
-                        after:border-white after:border-r-2 after:border-b-2 
-                        after:rotate-45"
-              />
-              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">
-                {value}
-              </span>
-            </label>
-          ))}
+          {["In Stock", "Out of Stock"].map((value) => {
+            const stockParam = searchParams.get("stock");
+
+            const stockValue = value === "In Stock" ? "1" : "0";
+
+            return (
+              <label
+                key={value}
+                className="flex items-center gap-[12px] cursor-pointer group"
+              >
+                <input
+                  type="checkbox"
+                  checked={stockParam === stockValue}
+                  onChange={(e) => {
+                    const params = new URLSearchParams(searchParams);
+
+                    if (e.target.checked) {
+                      params.set("stock", stockValue);
+                    } else {
+                      params.delete("stock");
+                    }
+
+                    setSearchParams(params);
+                  }}
+                  className="w-[14px] h-[14px] 
+          rounded-[2px] 
+          border-[1px] border-[#B0AEAE] 
+          appearance-none 
+          checked:bg-[#014162] checked:border-[#014162] 
+          cursor-pointer 
+          transition-all duration-200
+          relative
+          after:content-[''] after:hidden checked:after:block
+          after:absolute after:left-[4px] after:top-[1px]
+          after:w-[4px] after:h-[8px] 
+          after:border-white after:border-r-2 after:border-b-2 
+          after:rotate-45"
+                />
+
+                <span className="text-[16px] font-normal text-[#000000] leading-[24px]">
+                  {value}
+                </span>
+              </label>
+            );
+          })}
         </div>
       </div>
 

@@ -22,7 +22,7 @@ export default function CategorySlider({ categoryId }: { categoryId: number }) {
   const searchTerm = searchParams.get("search") || "";
 
   const { category, meals, isLoading, error } = useCategoryMeals(
-    categoryId,
+    categoryId || 1,
     searchTerm,
   );
   if (isLoading) {

@@ -11,12 +11,21 @@ export const getCategories = async (): Promise<CategoriesResponse> => {
 };
 
 export const getCategoriesDetails = async (
-  number: number,
+  categoryId: number,
   searchTerm?: string,
+  stock?: string,
+  brand?: string,
 ): Promise<MealsResponse> => {
-  const response = await axiosInstance.get<MealsResponse>(
-    `/api/meals?search=${searchTerm ? searchTerm : ""}&category_id=${number}`,
-  );
+  const params: Record<string, string | number> = {};
 
-  return response.data;
+  if (categoryId) params.category_id = categoryId;
+  if (searchTerm) params.search = searchTerm;
+  if (stock) params.in_stock = stock;
+  if (brand) params.brand = brand;
+
+  const { data } = await axiosInstance.get<MealsResponse>("/api/meals", {
+    params,
+  });
+
+  return data;
 };
