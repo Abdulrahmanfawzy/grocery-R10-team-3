@@ -4,35 +4,44 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import z from "zod";
 
-export const smartListSchema = z.object({
+export const createSmartListSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().min(10),
+  image: z.instanceof(File),
   meal_ids: z.array(z.number()).min(1, "At least one meal is required"),
 });
 
-export type SmartListFormValues = z.infer<typeof smartListSchema>;
+export type CreateSmartListFormValues = z.infer<typeof createSmartListSchema>;
 
-async function editList(id: number, params: SmartListFormValues) {
+async function createSmartList(params: CreateSmartListFormValues) {
   const formData = new FormData();
   formData.append("name", params.name);
   formData.append("description", params.description);
+  if (params.image) {
+    formData.append("image", params.image);
+  }
   params.meal_ids.forEach((id) => formData.append("meal_ids[]", String(id)));
-  const res = await axiosInstance.put(`/api/smart-lists/${id}`, formData);
-  return res;
+
+  const res = await axiosInstance.post("/api/smart-lists", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
 }
 
-export function useEditList() {
+export function useCreateSmartList() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...data }: { id: number } & SmartListFormValues) =>
-      editList(id, data),
-    mutationKey: ["edit-list"],
+    mutationKey: ["create-smart-list"],
+    mutationFn: (data: CreateSmartListFormValues) => createSmartList(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get-smart-list"] });
-      successToast("List Updated Successfully");
+      successToast("List Created Successfully");
     },
     onError: (error: AxiosError<any>) => {
-      const message = error.response?.data.message || "Failed To Update List";
+      const message =
+        error.response?.data.message || "Failed to create your list";
       errorToast(message);
     },
   });

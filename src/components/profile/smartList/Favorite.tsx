@@ -1,15 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { useGetFavorites } from "@/lib/api/profile/smartListApi/use-getFavorite";
 import type { FavoriteInterface } from "@/types/profile/smartList/FavoritesTypes";
 import EmptyState from "../dashboard/EmptyState";
 import { ShoppingBag } from "lucide-react";
+import AddToCart from "../addToCart/AddToCart";
 
-const Favorite = () => {
-  const { data, isLoading } = useGetFavorites();
-  console.log(data);
+interface Props {
+  favorites: FavoriteInterface;
+}
 
-  if (isLoading) return <div className="">Loading...</div>;
-  const favorites: FavoriteInterface = data;
+const Favorite = ({ favorites }: Props) => {
   return (
     <div>
       <div className="bg-card rounded-lg border border-border p-6 my-5">
@@ -45,9 +44,7 @@ const Favorite = () => {
                     </p>
                   </div>
                 </div>
-                <Button className="cursor-pointer" size="sm">
-                  Add
-                </Button>
+                <AddToCart id={item.id} quantity={1} />
               </div>
             ))
           ) : (

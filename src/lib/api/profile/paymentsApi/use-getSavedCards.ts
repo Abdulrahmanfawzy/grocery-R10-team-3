@@ -6,7 +6,7 @@ async function getSavedCard() {
   return res.data;
 }
 
-function useGetSavedCard() {
+export function useGetSavedCard() {
   return useQuery({
     queryKey: ["get-saved-card"],
     queryFn: getSavedCard,

@@ -1,33 +1,54 @@
 import { errorToast, successToast } from "@/components/Toast/Toaster";
 import axiosInstance from "@/lib/Axios/axiosInstance";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import z from "zod";
+import z, { object, optional } from "zod";
 
 type UpdateImage = {
   image: File;
 };
 
 //   Schema
-export const ProfileSchema = z.object({
-  firstname: z
-    .string()
-    .min(3, "First Name is required and must be  3 letters ")
-    .regex(/^[A-Za-z]+$/, "Name must be letters ony"),
-  lastname: z
-    .string()
-    .min(3, "First Name is required and must be  3 letters ")
-    .regex(/^[A-Za-z]+$/, "Name must be letters ony"),
-  email: z.string().email("Please enter a valid email!"),
-  phone: z
-    .string()
-    .regex(
-      /^\+[1-9]\d{10,14}$/,
-      "Enter a valid phone number (e.g. +201018191919)",
-    ),
-  preferred_languages: z
-    .array(z.enum(["en", "ar", "fr", "de"]))
-    .min(1, "Select at least one language"),
-});
+export const ProfileSchema = z
+  .object({
+    firstname: z
+      .string()
+      .min(3, "First name must be at least 3 letters")
+      .regex(/^[A-Za-z]+$/, "Name must contain only letters")
+      .optional(),
+
+    lastname: z
+      .string()
+      .min(3, "Last name must be at least 3 letters")
+      .regex(/^[A-Za-z]+$/, "Name must contain only letters")
+      .optional(),
+
+    email: z.string().email("Please enter a valid email").optional(),
+
+    phone: z
+      .string()
+      .regex(
+        /^\+[1-9]\d{10,14}$/,
+        "Enter a valid phone number (e.g. +201018191919)",
+      )
+      .optional(),
+
+    preferred_languages: z
+      .array(z.enum(["en", "ar", "fr", "de"]))
+      .min(1, "Select at least one language")
+      .optional(),
+  })
+  .refine(
+    (data) =>
+      Object.values(data).some(
+        (value) =>
+          value !== undefined &&
+          value !== "" &&
+          !(Array.isArray(value) && value.length === 0),
+      ),
+    {
+      message: "At least one field must be provided",
+    },
+  );
 
 export type UpdateProfile = z.infer<typeof ProfileSchema>;
 

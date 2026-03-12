@@ -1,10 +1,26 @@
+import Error from "@/components/common/Error";
+import Loading from "@/components/common/Loading";
 import Favorite from "@/components/profile/smartList/Favorite";
 import List from "@/components/profile/smartList/List";
-import { Button } from "@/components/ui/button";
-import { favorites, lists } from "@/lib/constants/smartList/MockData";
-import { Plus, ShoppingCart, Trash2 } from "lucide-react";
+import CreateList from "@/components/profile/smartList/listDialog/CreateList";
+import { useGetFavorites } from "@/lib/api/profile/smartListApi/use-getFavorite";
+import { useGetSmartList } from "@/lib/api/profile/smartListApi/use-getSmartList";
 
 const SmartList = () => {
+  const { data, isLoading, isError } = useGetSmartList();
+  const {
+    data: favoritesData,
+    isLoading: favoriteLoading,
+    isError: favoriteError,
+  } = useGetFavorites();
+
+  if (isLoading || favoriteLoading) return <Loading />;
+
+  if (isError || favoriteError)
+    return <Error error={data.message || favoritesData.message} />;
+
+  console.log(data);
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -16,16 +32,14 @@ const SmartList = () => {
             Organize your shopping with custom lists
           </p>
         </div>
-        <Button className="cursor-pointer">
-          <Plus className="w-4 h-4 mr-1" /> Create New List
-        </Button>
+        <CreateList />
       </div>
 
       {/* Lists */}
-      <List />
+      <List lists={data} />
 
       {/* Favorite Items */}
-      <Favorite />
+      <Favorite favorites={favoritesData} />
 
       {/* Archived */}
       <div className="bg-card rounded-lg border border-border p-6">
