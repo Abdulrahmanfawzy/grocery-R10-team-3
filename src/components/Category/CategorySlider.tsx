@@ -9,10 +9,16 @@ import {
 import CategoryCard from "../common/MainCard";
 import { useCategoryMeals } from "@/hooks/useCategoryMeals";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSearchParams } from "react-router-dom";
 
 export default function CategorySlider({ categoryId }: { categoryId: number }) {
-  const { category, meals, isLoading, error } = useCategoryMeals(categoryId);
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("search") || "";
 
+  const { category, meals, isLoading, error } = useCategoryMeals(
+    categoryId,
+    searchTerm,
+  );
   if (isLoading) {
     return (
       <div className="max-w-6xl mx-auto my-10">
@@ -34,33 +40,35 @@ export default function CategorySlider({ categoryId }: { categoryId: number }) {
     );
   }
 
-  if (!meals.length) {
-    return null;
-  }
-
   return (
     <div className="max-w-6xl mx-auto my-10">
       <h2 className="text-lg font-semibold mb-4">{category?.name}</h2>
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full mx-auto"
-      >
-        <CarouselContent>
-          {meals.map((meal) => (
-            <CarouselItem key={meal.id} className=" lg:basis-1/3">
-              <div className="p-1">
-                <Card>
-                  <CategoryCard meal={meal} />
-                </Card>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+      {meals.length > 0 ? (
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="w-full mx-auto"
+        >
+          <CarouselContent>
+            {meals.map((meal) => (
+              <CarouselItem key={meal.id} className=" lg:basis-1/3">
+                <div className="p-1">
+                  <Card>
+                    <CategoryCard meal={meal} />
+                  </Card>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      ) : searchTerm ? (
+        <p className="text-muted-foreground text-sm">
+          No meals found for "{searchTerm}" in this category.
+        </p>
+      ) : null}
     </div>
   );
 }

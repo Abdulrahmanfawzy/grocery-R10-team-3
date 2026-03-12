@@ -12,9 +12,11 @@ export const getCategories = async (): Promise<CategoriesResponse> => {
 
 export const getCategoriesDetails = async (
   number: number,
+  searchTerm?: string,
 ): Promise<MealsResponse> => {
   const response = await axiosInstance.get<MealsResponse>(
-    `/api/categories/${number}/meals`,
+    `/api/meals?search=${searchTerm ? searchTerm : ""}&category_id=${number}`,
   );
+
   return response.data;
 };
