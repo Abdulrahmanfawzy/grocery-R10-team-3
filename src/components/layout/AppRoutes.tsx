@@ -27,6 +27,8 @@ import Security from "@/pages/profile/Security";
 import Support from "@/pages/profile/Support";
 import Settings from "@/pages/profile/Settings";
 import CategoryPage from "@/pages/Category/CategoryPage";
+import LoginPage from "@/pages/login/LoginPage";
+import SignUpPage from "@/pages/signup/SignUpPage";
 
 const AppRoutes = () => {
   const AuthInitializer = ({ children }: { children: ReactNode }) => {
@@ -100,7 +102,8 @@ const AppRoutes = () => {
                     <Route path="support" element={<Support />} />
                     <Route path="settings" element={<Settings />} />
                   </Route>
-                  <Route path="/login" element={<Autho />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/signup" element={<SignUpPage />} />
                   <Route path="/account" element={<Account />} />
                   <Route path="/Choose" element={<Choose />} />
                   <Route path="/Recovery" element={<Recovery />} />
