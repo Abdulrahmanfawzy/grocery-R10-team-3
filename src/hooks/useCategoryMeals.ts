@@ -7,6 +7,8 @@ export const useCategoryMeals = (
   searchTerm?: string,
   stock?: string,
   brand?: string,
+  min_price?: string,
+  max_price?: string,
 ) => {
   const [mealsData, setMealsData] = useState<MealsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,6 +23,8 @@ export const useCategoryMeals = (
         searchTerm,
         stock,
         brand,
+        min_price,
+        max_price,
       );
       if (response.success) {
         setMealsData(response.data);
@@ -35,7 +39,7 @@ export const useCategoryMeals = (
 
   useEffect(() => {
     fetchCategoryMeals();
-  }, [categoryId, searchTerm, stock, brand]);
+  }, [categoryId, searchTerm, stock, brand, min_price, max_price]);
 
   return {
     category: mealsData?.category,

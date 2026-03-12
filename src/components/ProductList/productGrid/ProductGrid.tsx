@@ -13,11 +13,15 @@ const ProductGrid = () => {
   const category_id = searchParams.get("category_id");
   const stock = searchParams.get("stock");
   const brand = searchParams.get("brand");
+  const min_price = searchParams.get("min_price");
+  const max_price = searchParams.get("max_price");
   const { meals, isLoading, error } = useCategoryMeals(
     Number(category_id),
     "",
     stock || undefined,
     brand || undefined,
+    min_price || undefined,
+    max_price || undefined,
   );
   return (
     <section className="w-full">

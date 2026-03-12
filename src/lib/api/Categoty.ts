@@ -15,9 +15,13 @@ export const getCategoriesDetails = async (
   searchTerm?: string,
   stock?: string,
   brand?: string,
+  min_price?: string,
+  max_price?: string,
 ): Promise<MealsResponse> => {
   const params: Record<string, string | number> = {};
 
+  if (min_price) params.min_price = min_price;
+  if (max_price) params.max_price = max_price;
   if (categoryId) params.category_id = categoryId;
   if (searchTerm) params.search = searchTerm;
   if (stock) params.in_stock = stock;

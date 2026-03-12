@@ -4,14 +4,14 @@ import searchIcon from "@/assets/icons/search-icon.svg";
 import styles from "./ProductFilter.module.css";
 import { useCategory } from "@/hooks/useCategory";
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 const ProductFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { categories, isLoading } = useCategory();
+  const [priceRange, setPriceRange] = useState<[number, number]>([5, 500]);
   const selectedCat = searchParams.get("category_id");
   const brands = ["Premium"];
-
-  const types = ["Fresh", "Organic", "Frozen"];
 
   return (
     <aside className="bg-[#F7FCFF] rounded-[8px] py-[16px] shadow-sm">
@@ -100,40 +100,6 @@ const ProductFilter = () => {
               </label>
             );
           })}
-        </div>
-      </div>
-
-      <div className="mb-8">
-        <h3 className="text-[20px] font-medium text-[#000000] mb-[8px] px-[16px]">
-          Product Type
-        </h3>
-        <div className="space-y-2 px-[16px]">
-          {types.map((type) => (
-            <label
-              key={type}
-              className="flex items-center gap-[12px] cursor-pointer group"
-            >
-              <input
-                type="checkbox"
-                className="w-[14px] h-[14px] 
-                        rounded-[2px] 
-                        border-[1px] border-[#B0AEAE] 
-                        appearance-none 
-                        checked:bg-[#014162] checked:border-[#014162] 
-                        cursor-pointer 
-                        transition-all duration-200
-                        relative
-                        after:content-[''] after:hidden checked:after:block
-                        after:absolute after:left-[4px] after:top-[1px]
-                        after:w-[4px] after:h-[8px] 
-                        after:border-white after:border-r-2 after:border-b-2 
-                        after:rotate-45"
-              />
-              <span className="text-[16px] font-normal text-[#000000] leading-[24px]">
-                {type}
-              </span>
-            </label>
-          ))}
         </div>
       </div>
 
@@ -246,13 +212,20 @@ const ProductFilter = () => {
               Your range:
             </span>
             <span className="text-[16px] font-bold text-[#071C1F]">
-              £50 - £80
+              £{priceRange[0]} - £{priceRange[1]}
             </span>
           </div>
           <Slider
-            defaultValue={[25, 50]}
+            value={priceRange}
             max={100}
             step={5}
+            onValueChange={(val) => {
+              setPriceRange(val as [number, number]);
+              const params = new URLSearchParams(searchParams);
+              params.set("min_price", String(val[0]));
+              params.set("max_price", String(val[1]));
+              setSearchParams(params);
+            }}
             className="mx-auto w-full max-w-xs"
           />
         </div>
