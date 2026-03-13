@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { OrderSummary } from "@/components/common/checkout1/OrderSummary";
-import PaymentMethods from "@/components/common/checkout2/PaymentMethods";
+import PaymentMethod from "@/components/common/checkout2/PaymentMethod";
 import Steps from "@/components/common/Steps";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,6 +8,8 @@ import { useAppSelector, useAppDispatch } from "@/hooks/hooks";
 import { useNavigate } from "react-router-dom";
 import { setPayment } from "@/lib/store/checkoutSlice";
 import { useCreateOrderMutation } from "@/lib/api/checkoutQueries";
+import { Elements } from "@stripe/react-stripe-js"; // ✅ Stripe
+import { stripePromise } from "@/lib/stripe/stripe"; // ✅ Stripe
 
 const CheckoutPage2 = () => {
   const dispatch = useAppDispatch();
@@ -38,8 +40,13 @@ const CheckoutPage2 = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gray-50/30 min-h-screen">
       <Steps />
-      <PaymentMethods />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-15 w-full ">
+
+      {/* ✅ PaymentMethod بتاعتك محاطة بـ Elements */}
+      <Elements stripe={stripePromise}>
+        <PaymentMethod />
+      </Elements>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-15 w-full">
         <OrderSummary />
 
         <div className="space-y-6">
@@ -83,8 +90,7 @@ const CheckoutPage2 = () => {
         <Button
           onClick={() => handleConfirmPayment()}
           disabled={createOrderMutation.isPending}
-          className="w-full md:w-100 bg-[#004a61] hover:bg-[#003649] h-12 text-white font-bold rounded-lg"
-        >
+          className="w-full md:w-100 bg-[#004a61] hover:bg-[#003649] h-12 text-white font-bold rounded-lg">
           {createOrderMutation.isPending
             ? "جاري إنشاء الطلب..."
             : "Confirm Payment & Go To Checkout"}

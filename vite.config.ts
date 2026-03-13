@@ -12,6 +12,9 @@ export default defineConfig({
     },
   },
   esbuild: {
-    logOverride: { "ts-error": "silent" }, // ignores TS errors
+    logOverride: { "ts-error": "silent" },
+  },
+  server: {
+    port: 5173,
   },
 });

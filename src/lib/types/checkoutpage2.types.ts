@@ -1,22 +1,15 @@
-export interface CardOptionProps {
+export interface CartItem {
   id: string;
-  label: string;
-  sub: string;
-  icon: React.ReactNode;
-  selected: boolean;
-  onClick: () => void;
+  name: string;
+  quantity: number;
+  price: number;
+  imageUrl: string;
+  inStock: boolean;
 }
 
-export interface MethodBadgeProps {
-  label: string;
-  sub: string;
-  icon: React.ReactNode;
-  selected?: boolean;
-  onClick?: () => void;
-}
-
-export interface SummaryItemProps {
-  title: string;
-  price: string;
-  image?: string;
+export interface OrderSummary {
+  items: CartItem[];
+  subtotal: number;
+  shipping: number;
+  total: number;
 }
