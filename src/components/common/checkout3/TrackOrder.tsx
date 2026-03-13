@@ -23,7 +23,7 @@ function TrackOrder() {
     data: trackData,
     isLoading,
     error,
-  } = useTrackOrderQuery(!!lastOrderId);
+  } = useTrackOrderQuery(lastOrderId, !!lastOrderId);
 
   const stepsFromApi = trackData?.steps;
   const currentStatus = trackData?.status ?? "Out for Delivery";
@@ -71,22 +71,19 @@ function TrackOrder() {
           {steps.map((step) => (
             <div
               key={step.id}
-              className="relative z-10 flex flex-col items-center group"
-            >
+              className="relative z-10 flex flex-col items-center group">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                   step.status === "completed" || step.status === "active"
                     ? "bg-[#004a61] text-white shadow-lg"
                     : "bg-gray-300 text-gray-500 opacity-60"
-                }`}
-              >
+                }`}>
                 {step.icon}
               </div>
               <span
                 className={`text-[11px] mt-3 font-semibold absolute -bottom-8 whitespace-nowrap ${
                   step.status === "active" ? "text-[#004a61]" : "text-gray-400"
-                }`}
-              >
+                }`}>
                 {step.label}
               </span>
             </div>

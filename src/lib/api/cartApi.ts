@@ -1,155 +1,170 @@
-import axiosInstance from "@/lib/axiosInstance";
-import type { CartProduct } from "../types/cartStore";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "react-toastify";
+import type { Cart } from "../types/cart.types";
+import type { CartItem } from "../types/checkoutpage2.types";
+import api from "./checkoutApi";
 
-export type { CartProduct };
+// ✅ بتجيب الـ token من localStorage بدل Redux
+const getToken = () => {
+  try {
+    const persisted = localStorage.getItem("persist:login");
+    if (persisted) {
+      const parsed = JSON.parse(persisted);
+      return parsed.token?.replace(/"/g, "") ?? null;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+};
 
-export const cartQueryKey = ["cart"] as const;
+export const getCartProducts = async (token: string | null): Promise<Cart> => {
+  const { data } = await axios.get(
+    `https://grocery.newcinderella.online/api/cart`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return data.data;
+};
 
-interface CartApiResponse {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    status: string;
-    items: Array<{
-      id: number;
-      meal: {
-        id: number;
-        title: string;
-        slug: string;
-        image_url: string;
-        price: number;
-        discount_price: number | null;
-        final_price: number;
-        rating: number;
-        size: string;
-        brand: string;
-        stock_quantity: number;
-        is_available: boolean;
-        in_stock: boolean;
-        category: {
-          id: number;
-          name: string;
-        };
-        subcategory: {
-          id: number;
-          name: string;
-        } | null;
-      };
-      quantity: number;
-      unit_price: number;
-      discount_amount: number;
-      subtotal: number;
-    }>;
-    item_count: number;
-    subtotal: number;
-    tax: number;
-    discount: number;
-    total: number;
-    is_empty: boolean;
-    created_at: string;
-    updated_at: string;
+export const addToCart = async ({
+  mealId,
+  quantity,
+  token,
+}: {
+  mealId: number;
+  quantity: number;
+  token: string | null;
+}) => {
+  const { data } = await axios.post(
+    "https://grocery.newcinderella.online/api/cart/items",
+    { meal_id: mealId, quantity },
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  return data;
+};
+
+export const updateCart = async ({
+  mealId,
+  quantity,
+  token,
+}: {
+  mealId: number;
+  quantity: number;
+  token: string | null;
+}) => {
+  const { data } = await axios.put(
+    `https://grocery.newcinderella.online/api/cart/items/${mealId}`,
+    { quantity },
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  return data;
+};
+
+export const removeCartItem = async (itemId: number, token: string | null) => {
+  const { data } = await axios.delete(
+    `https://grocery.newcinderella.online/api/cart/items/${itemId}`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  return data;
+};
+
+export const clearCart = async (token: string | null) => {
+  const { data } = await axios.delete(
+    `https://grocery.newcinderella.online/api/cart/clear`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  return data;
+};
+
+export const useCart = () => {
+  const token = getToken();
+  return useQuery({
+    queryKey: ["cart", token],
+    queryFn: () => getCartProducts(token),
+  });
+};
+
+export const useAddToCart = () => {
+  const queryClient = useQueryClient();
+  const token = getToken();
+
+  return useMutation({
+    mutationFn: (variables: { mealId: number; quantity: number }) =>
+      addToCart({ ...variables, token }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast("Your Product Added To cart Successfully");
+    },
+  });
+};
+
+export const useUpdataQuantity = () => {
+  const queryClient = useQueryClient();
+  const token = getToken();
+
+  return useMutation({
+    mutationFn: (variables: { mealId: number; quantity: number }) =>
+      updateCart({ ...variables, token }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success("Your Product Quantity updated Successfully");
+    },
+  });
+};
+
+export const useRemoveCartItem = () => {
+  const token = getToken();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (itemId: number) => removeCartItem(itemId, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success("Your Product Have been Removed From Cart");
+    },
+  });
+};
+
+export const useClearCart = () => {
+  const queryClient = useQueryClient();
+  const token = getToken();
+
+  return useMutation({
+    mutationFn: () => clearCart(token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success("Your Cart is Cleared Now");
+    },
+  });
+};
+
+export async function getCart() {
+  const response = await api.get("/cart");
+  const data = response.data.data;
+
+  const items: CartItem[] = data.items.map((item: any) => ({
+    id: item.id,
+    name: item.meal.title,
+    quantity: item.quantity,
+    price: item.unit_price,
+    imageUrl: item.meal.image_url,
+    inStock: item.meal.in_stock,
+  }));
+
+  return {
+    items,
+    subtotal: data.subtotal,
+    tax: data.tax,
+    total: data.total,
   };
 }
 
-const transformCartItem = (
-  item: CartApiResponse["data"]["items"][0],
-): CartProduct => ({
-  id: item.id,
-  name: item.meal.title,
-  price: item.unit_price || item.meal.final_price || item.meal.price,
-  quantity: item.quantity,
-  image: item.meal.image_url,
-  outOfStock: !item.meal.in_stock,
-});
-
-export const getCart = async (): Promise<CartProduct[]> => {
-  try {
-    const response = await axiosInstance.get<CartApiResponse>("/api/cart");
-
-    if (response.data?.data?.items && Array.isArray(response.data.data.items)) {
-      return response.data.data.items.map(transformCartItem);
-    }
-
-    if (response.data?.data) {
-      const data = response.data.data;
-      if (Array.isArray(data)) {
-        return data.map(transformCartItem);
-      }
-      if (data.items && Array.isArray(data.items)) {
-        return data.items.map(transformCartItem);
-      }
-    }
-
-    console.warn("Cart API returned unexpected structure:", response.data);
-    return [];
-  } catch (error) {
-    console.error("Error fetching cart:", error);
-    return [];
-  }
-};
-
-export interface AddToCartPayload {
-  product_id: number;
-  quantity: number;
+export async function updateCartItem(id: string, quantity: number) {
+  const response = await api.put(`/cart/items/${id}`, { quantity });
+  return response.data;
 }
-
-export const addToCart = async (
-  payload: AddToCartPayload,
-): Promise<{ data: CartProduct[] }> => {
-  try {
-    const response = await axiosInstance.post<CartApiResponse>(
-      "/api/cart/add",
-      payload,
-    );
-    if (response.data?.data?.items) {
-      return {
-        data: response.data.data.items.map(transformCartItem),
-      };
-    }
-    return { data: [] };
-  } catch (error) {
-    console.error("Error adding to cart:", error);
-    return { data: [] };
-  }
-};
-
-export const updateCartItem = async (
-  itemId: number,
-  quantity: number,
-): Promise<{ data: CartProduct[] }> => {
-  try {
-    const response = await axiosInstance.put<CartApiResponse>(
-      `/api/cart/${itemId}`,
-      { quantity },
-    );
-    if (response.data?.data?.items) {
-      return {
-        data: response.data.data.items.map(transformCartItem),
-      };
-    }
-    return { data: [] };
-  } catch (error) {
-    console.error("Error updating cart:", error);
-    return { data: [] };
-  }
-};
-
-export const removeFromCart = async (
-  itemId: number,
-): Promise<{ data: CartProduct[] }> => {
-  try {
-    const response = await axiosInstance.delete<CartApiResponse>(
-      `/api/cart/${itemId}`,
-    );
-    if (response.data?.data?.items) {
-      return {
-        data: response.data.data.items.map(transformCartItem),
-      };
-    }
-    return { data: [] };
-  } catch (error) {
-    console.error("Error removing from cart:", error);
-    return { data: [] };
-  }
-};

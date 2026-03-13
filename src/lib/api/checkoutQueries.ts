@@ -4,14 +4,14 @@ import {
   createAddress,
   type CreateAddressPayload,
 } from "./addressesApi";
-import { getSavedCards } from "./cardsApi";
+import { getCards as getSavedCards } from "./cardsApi";
 import {
-  createOrder,
-  trackOrder,
-  getOrderDetails,
-  getReceipt,
-  submitFeedback,
-  type CreateOrderPayload,
+  storeOrder,
+  type OrderPayload,
+  getOrderTrack,
+  getOrderReceipt,
+  submitOrderFeedback,
+  type FeedbackPayload,
 } from "./ordersApi";
 
 export const addressesQueryKey = ["addresses"] as const;
@@ -43,12 +43,11 @@ export function useSavedCardsQuery() {
 }
 
 export const ordersTrackQueryKey = ["orders", "track"] as const;
-export const orderDetailsQueryKey = (id: number) => ["orders", id] as const;
 
 export function useCreateOrderMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: CreateOrderPayload) => createOrder(payload),
+    mutationFn: (payload: OrderPayload) => storeOrder(payload),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ordersTrackQueryKey });
       const orderId = data?.data?.id;
@@ -60,40 +59,34 @@ export function useCreateOrderMutation() {
     },
   });
 }
-
-export function useTrackOrderQuery(enabled: boolean) {
-  return useQuery({
-    queryKey: ordersTrackQueryKey,
-    queryFn: trackOrder,
-    enabled,
-  });
-}
+export const orderDetailsQueryKey = (id: number) => ["orders", id] as const;
 
 export function useOrderDetailsQuery(orderId: number | null, enabled: boolean) {
   return useQuery({
     queryKey: orderDetailsQueryKey(orderId ?? 0),
-    queryFn: () => getOrderDetails(orderId!),
+    queryFn: () => orderId,
     enabled: enabled && !!orderId && orderId > 0,
   });
 }
 
-export const receiptQueryKey = (id: number) =>
-  ["orders", "receipt", id] as const;
+export function useTrackOrderQuery(orderId: number | null, enabled: boolean) {
+  return useQuery({
+    queryKey: ["orders", "track", orderId],
+    queryFn: () => (orderId ? getOrderTrack(orderId) : null),
+    enabled: enabled && !!orderId,
+  });
+}
 
 export function useReceiptQuery(orderId: number | null, enabled: boolean) {
   return useQuery({
-    queryKey: receiptQueryKey(orderId ?? 0),
-    queryFn: () => getReceipt(orderId!),
-    enabled: enabled && !!orderId && orderId > 0,
+    queryKey: ["orders", "receipt", orderId],
+    queryFn: () => (orderId ? getOrderReceipt(orderId) : null),
+    enabled: enabled && !!orderId,
   });
 }
 
 export function useSubmitFeedbackMutation() {
-  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: submitFeedback,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ordersTrackQueryKey });
-    },
+    mutationFn: (payload: FeedbackPayload) => submitOrderFeedback(payload),
   });
 }
