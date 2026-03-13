@@ -20,6 +20,32 @@ const ProductFilter = () => {
           Categories
         </h3>
         <div className="flex flex-col">
+          <button
+            onClick={() => {
+              const params = new URLSearchParams(searchParams);
+              params.delete("category_id");
+              setSearchParams(params);
+            }}
+            className={`flex items-center p-[12px] px-[16px] w-full 
+                transition-all duration-200 rounded-[4px] cursor-pointer group
+                  ${
+                    selectedCat
+                      ? "bg-white shadow-sm text-[#000000]"
+                      : "text-[#0E1112] hover:bg-white/80"
+                  }`}
+          >
+            <div className="flex items-center gap-[16px]">
+              <img
+                src={""}
+                alt={""}
+                className="w-[24px] h-[24px] object-contain shrink-0"
+              />
+
+              <span className="text-[16px] font-normal text-[#0E1112] leading-[24px]">
+                All
+              </span>
+            </div>
+          </button>
           {categories.map((cat) => (
             <button
               key={cat.id}
