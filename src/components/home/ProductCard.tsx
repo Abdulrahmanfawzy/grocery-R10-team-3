@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   id: string | number;
@@ -59,9 +60,11 @@ const ProductCard = ({
         <p className="text-[10px] text-gray-400 font-medium mb-1 uppercase tracking-wider">
           {category}
         </p>
-        <h3 className="font-bold text-sm text-[#141212] mb-1 line-clamp-2 min-h-[40px] uppercase">
-          {title}
-        </h3>
+        <Link to={`product/${id}`}>
+          <h3 className="font-bold text-sm text-[#141212] mb-1 line-clamp-2 min-h-[40px] uppercase">
+            {title}
+          </h3>
+        </Link>
 
         <div className="flex items-center gap-1 mb-1">
           <div className="flex">

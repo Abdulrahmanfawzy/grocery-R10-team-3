@@ -1,4 +1,5 @@
 import DeleteIcon from "@/assets/icons/delete.svg";
+import { Link } from "react-router-dom";
 
 interface Product {
   id: number;
@@ -44,9 +45,11 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
 
       <div className="text-center mb-[12px]">
-        <h4 className="text-[16px] text-[#01050DCC] mb-[4px]">
-          {product.name}
-        </h4>
+        <Link to={`product/${product.id}`}>
+          <h4 className="text-[16px] text-[#01050DCC] mb-[4px]">
+            {product.name}
+          </h4>
+        </Link>
         <div className="flex items-center justify-center gap-[8px]">
           <span className="text-[16px] text-[#0E1112]">
             £ {product.price.toFixed(2)}

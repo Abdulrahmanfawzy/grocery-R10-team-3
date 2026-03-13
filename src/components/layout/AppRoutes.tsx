@@ -29,6 +29,7 @@ import Settings from "@/pages/profile/Settings";
 import CategoryPage from "@/pages/Category/CategoryPage";
 import LoginPage from "@/pages/login/LoginPage";
 import SignUpPage from "@/pages/signup/SignUpPage";
+import ProductDetails from "@/pages/product/ProductDetails";
 
 const AppRoutes = () => {
   const queryClient = new QueryClient({
@@ -51,6 +52,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/shop" element={<ProductList />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/checkout1" element={<CheckoutPage1 />} />
                 <Route path="/checkout2" element={<CheckoutPage2 />} />
                 <Route path="/checkout3" element={<CheckoutPage3 />} />
