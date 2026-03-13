@@ -1,17 +1,17 @@
-import axios, { type AxiosRequestConfig } from 'axios';
+import axios, { type AxiosRequestConfig } from "axios";
 
 const config: AxiosRequestConfig = {
-  baseURL: 'https://grocery.newcinderella.online',
+  baseURL: "https://grocery.newcinderella.online",
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 };
 
 const axiosInstance = axios.create(config);
 
 // Always use the fixed authentication token for every request
-const FIXED_TOKEN = "355|DaHfhqKU7rcbUYuq0GJSOiyZVT4c0QHWU7ENaoSP141eb587";
+const FIXED_TOKEN = localStorage.getItem("token");
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -20,8 +20,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;
-

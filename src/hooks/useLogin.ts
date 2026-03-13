@@ -26,7 +26,7 @@ export const useLogin = () => {
         console.log("User data:", response.data.user);
 
         // Navigate to home page
-        navigate("/");
+        window.location.href = "/";
 
         return { success: true, data: response.data };
       }

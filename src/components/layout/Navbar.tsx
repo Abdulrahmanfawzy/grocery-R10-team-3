@@ -14,6 +14,8 @@ import { useCart } from "@/context/CartContext";
 
 const Navbar = () => {
   const { cartCount } = useCart();
+  const token = localStorage.getItem("token");
+
   return (
     <nav className="w-full bg-white border-b border-gray-100 py-3 px-4 md:px-8">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
@@ -77,11 +79,11 @@ const Navbar = () => {
           </Link>
 
           <Link
-            to="/profile"
+            to={token ? "/profile" : "/login"}
             className="bg-[#004a61] hover:bg-[#003649] flex items-center gap-2 rounded-md px-4 h-10 text-white text-sm font-medium transition-colors"
           >
             <span className="text-sm font-medium">
-              <User size={18} />
+              {token ? <User size={18} /> : "signin"}
             </span>
           </Link>
         </div>
