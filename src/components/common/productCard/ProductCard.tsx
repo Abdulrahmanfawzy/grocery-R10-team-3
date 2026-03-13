@@ -45,7 +45,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
 
       <div className="text-center mb-[12px]">
-        <Link to={`product/${product.id}`}>
+        <Link to={`/product/${product.id}`}>
           <h4 className="text-[16px] text-[#01050DCC] mb-[4px]">
             {product.name}
           </h4>

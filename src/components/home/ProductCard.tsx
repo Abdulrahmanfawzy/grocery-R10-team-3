@@ -60,7 +60,7 @@ const ProductCard = ({
         <p className="text-[10px] text-gray-400 font-medium mb-1 uppercase tracking-wider">
           {category}
         </p>
-        <Link to={`product/${id}`}>
+        <Link to={`/product/${id}`}>
           <h3 className="font-bold text-sm text-[#141212] mb-1 line-clamp-2 min-h-[40px] uppercase">
             {title}
           </h3>

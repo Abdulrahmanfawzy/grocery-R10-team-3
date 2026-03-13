@@ -59,7 +59,7 @@ const ProductDetails = () => {
             className="w-full h-auto max-h-[500px] object-contain bg-gray-50 rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
           />
           {product.has_offer && (
-            <span className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
+            <span className="absolute top-4 left-4 bg-[#004a61] text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
               {product.offer_title}
             </span>
           )}
