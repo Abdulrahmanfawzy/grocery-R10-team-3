@@ -63,14 +63,14 @@ const List = ({ lists }: Props) => {
                 </Button>
               </div>
               <div className="flex items-center justify-between w-full mt-5">
-                <Link
+                {/* <Link
                   to={`/profile/list-items/${list.id}`}
                   state={{ id: list.id }}
                 >
                   <Button size="sm" className="gap-1 cursor-pointer">
                     <Box className="w-3 h-3" /> View All items
                   </Button>
-                </Link>
+                </Link> */}
                 <EditList
                   id={list.id}
                   defaultValues={{
