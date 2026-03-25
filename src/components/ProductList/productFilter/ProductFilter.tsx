@@ -22,9 +22,8 @@ const ProductFilter = () => {
         <div className="flex flex-col">
           <button
             onClick={() => {
-              const params = new URLSearchParams(searchParams);
-              params.delete("category_id");
-              setSearchParams(params);
+              setSearchParams(new URLSearchParams());
+              setPriceRange([5, 500]);
             }}
             className={`flex items-center p-[12px] px-[16px] w-full 
                 transition-all duration-200 rounded-[4px] cursor-pointer group
@@ -57,7 +56,7 @@ const ProductFilter = () => {
               className={`flex items-center p-[12px] px-[16px] w-full 
                 transition-all duration-200 rounded-[4px] cursor-pointer group
                   ${
-                    selectedCat === cat.id
+                    selectedCat === cat.id.toString()
                       ? "bg-white shadow-sm text-[#000000]"
                       : "text-[#0E1112] hover:bg-white/80"
                   }`}
@@ -193,13 +192,13 @@ const ProductFilter = () => {
           <div className="relative flex items-center w-full h-[60px]">
             <input
               type="text"
-              placeholder="Search your keyword..."
+              placeholder="Search your keyword"
               className="
                 w-full h-full 
                 bg-[#D9D9D9] 
                 rounded-[8px] 
                 border-2 border-[#E4ECF2] 
-                pl-[22px] pr-[70px] 
+                pl-[18px] pr-[40px] 
                 text-[12px] font-semibold text-[#071C1F] 
                 outline-none 
                 placeholder:text-[#071C1F]/60
