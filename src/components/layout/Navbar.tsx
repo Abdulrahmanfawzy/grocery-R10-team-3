@@ -5,16 +5,29 @@ import {
   Home,
   LayoutGrid,
   ChevronDown,
-  User2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 const Navbar = () => {
+
   const { cartCount } = useCart();
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  const [search, setsearch] = useState("");
+
 
   return (
     <nav className="w-full bg-white border-b border-gray-100 py-3 px-4 md:px-8">
@@ -46,15 +59,56 @@ const Navbar = () => {
 
         <div className="flex-1 max-w-2xl hidden sm:flex items-center gap-0">
           <div className="relative flex items-center w-full">
-            <div className="absolute left-0 h-full flex items-center px-3 bg-gray-200 border-r border-gray-200 rounded-l-md text-xs font-semibold text-slate-700 cursor-pointer hover:bg-gray-200">
-              All Categories <ChevronDown size={14} className="ml-1" />
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="absolute left-0 h-full flex items-center px-3 bg-gray-200 border-r border-gray-200 rounded-l-md text-xs font-semibold text-slate-700 cursor-pointer hover:bg-gray-200">
+                  All Categories <ChevronDown size={14} className="ml-1" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48">
+                <DropdownMenuGroup>
+                  <DropdownMenuRadioItem
+                    onClick={() => navigate(`/shop?category_id=1${search && `&search=${search}` }`)}
+                    value="Vegetables"
+                  >
+                    Vegetables
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem
+                  onClick={() => navigate(`/shop?category_id=2${search && `&search=${search}` }`)}
+                  value="Fruits">
+                    Fruits
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem 
+                  onClick={() => navigate(`/shop?category_id=3${search && `&search=${search}` }`)}
+                  value="Dairy Products">
+                    Dairy Products
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem 
+                  onClick={() => navigate(`/shop?category_id=4${search && `&search=${search}` }`)}
+                  value="Meat & Poultry">
+                    Meat & Poultry
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem 
+                  onClick={() => navigate(`/shop?category_id=5${search && `&search=${search}` }`)}
+                  value="Bakery">
+                    Bakery
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem 
+                  onClick={() => navigate(`/shop?category_id=6${search && `&search=${search}` }`)}
+                  value="Beverages">
+                    Beverages
+                  </DropdownMenuRadioItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Input
               className="pl-32 pr-12 py-5 bg-gray-200 border-gray-200 focus-visible:ring-[#004a61]"
               placeholder="Search for items..."
+              onChange={(e)=> setsearch(e.target.value)}
             />
-            <Button className="absolute right-1 bg-[#004a61] hover:bg-[#003649] h-8 w-8 p-0">
-              <Search size={16} className="text-white" />
+            <Button onClick={()=> search && navigate(`/shop?search=${search}`) } className="absolute right-1 bg-[#004a61] hover:bg-[#003649] h-8 w-8 p-0">
+              <Search  size={16} className="text-white" />
             </Button>
           </div>
         </div>
@@ -83,7 +137,7 @@ const Navbar = () => {
             className="bg-[#004a61] hover:bg-[#003649] flex items-center gap-2 rounded-md px-4 h-10 text-white text-sm font-medium transition-colors"
           >
             <span className="text-sm font-medium">
-              {token ? <User size={18} /> : "signin"}
+              {token ? <User size={18} /> : "sign in"}
             </span>
           </Link>
         </div>
