@@ -38,7 +38,7 @@ const ProductSection = ({ title }: ProductSectionProps) => {
       <Tabs defaultValue="All" className="w-full">
         <div className="flex flex-col gap-4 mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-[#141212]">{title}</h2>
-          <div className="flex justify-end">
+          <div className="flex justify-start">
             <TabsList className="h-auto p-0 gap-2 sm:gap-3 lg:gap-4 overflow-x-auto no-scrollbar bg-transparent border-none w-full lg:w-auto justify-start lg:justify-center">
             {CATEGORY_SEQUENCE.map((cat) => (
               <TabsTrigger
